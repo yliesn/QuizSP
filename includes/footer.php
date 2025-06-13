@@ -9,8 +9,8 @@ if (!defined('ROOT_PATH')) {
     exit;
 }
 ?>
-<footer class="bg-gray-100 py-6 mt-10">
-    <div class="container mx-auto text-center text-gray-600">
+<footer class="bg-custom py-6 mt-10">
+    <div class="container mx-auto text-center text-custom">
         <p class="mb-0">&copy; <?php echo date('Y'); ?> PharmaStock</p>
     </div>
 </footer>

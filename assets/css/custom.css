@@ -1,0 +1,36 @@
+/* Fichier pour customiser les couleurs Tailwind via CSS natif ou classes utilitaires personnalisées */
+
+:root {
+  --color-primary: #2563eb; /* Bleu par défaut */
+  --color-secondary: #f59e42; /* Orange exemple */
+  --color-accent: #10b981; /* Vert exemple */
+  --color-bg: #f3f4f6; /* Gris clair */
+  --color-text: #1f2937; /* Gris foncé */
+}
+
+.bg-primary {
+  background-color: var(--color-primary) !important;
+}
+.text-primary {
+  color: var(--color-primary) !important;
+}
+.bg-secondary {
+  background-color: var(--color-secondary) !important;
+}
+.text-secondary {
+  color: var(--color-secondary) !important;
+}
+.bg-accent {
+  background-color: var(--color-accent) !important;
+}
+.text-accent {
+  color: var(--color-accent) !important;
+}
+.bg-custom {
+  background-color: var(--color-bg) !important;
+}
+.text-custom {
+  color: var(--color-text) !important;
+}
+
+/* Ajoute ici d'autres classes personnalisées si besoin */

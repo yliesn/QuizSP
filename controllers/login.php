@@ -40,18 +40,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['ip_address'] = $_SERVER['REMOTE_ADDR'];
             $updateStmt = $db->prepare("UPDATE user SET date_derniere_connexion = CURRENT_DATE() WHERE id = ?");
             $updateStmt->execute([$user['id']]);
-            redirect('../dashboard.php');
+            redirect(BASE_URL . '/dashboard.php');
         } elseif ($user && !$user['actif']) {
             $_SESSION['error_message'] = "Votre compte est désactivé. Veuillez contacter l'administrateur.";
-            redirect('../index.php');
+            redirect(BASE_URL . '/index.php');
         } else {
             $_SESSION['error_message'] = "Identifiant ou mot de passe incorrect";
-            redirect('../index.php');
+            redirect(BASE_URL . '/index.php');
         }
     } catch (Exception $e) {
         error_log('Erreur de connexion: ' . $e->getMessage());
         $_SESSION['error_message'] = "Erreur de connexion au serveur. Veuillez réessayer plus tard.";
-        redirect('../index.php');
+        redirect(BASE_URL . '/index.php');
     }
 } else {
     redirect('../index.php');

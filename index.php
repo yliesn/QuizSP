@@ -38,9 +38,11 @@ if (isset($_SESSION['error_message'])) {
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="<?php echo BASE_URL; ?>/assets/css/custom.css" rel="stylesheet">
+
     <title>Connexion - Gestion de Stock Pharmacie</title>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<body class="bg-custom min-h-screen flex items-center justify-center">
     <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
         <div class="flex flex-col items-center mb-6">
             <img src="assets/img/logo.png" alt="Logo Pharmacie" class="w-32 mb-2">
@@ -52,18 +54,18 @@ if (isset($_SESSION['error_message'])) {
             
             <!-- Champ Identifiant -->
             <div>
-                <label for="username" class="block text-gray-700">Identifiant</label>
-                <input type="text" id="username" name="username" required class="mt-1 w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <label for="username" class="block text-custom">Identifiant</label>
+                <input type="text" id="username" name="username" required class="mt-1 w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary">
             </div>
             
             <!-- Champ Mot de passe -->
             <div>
-                <label for="password" class="block text-gray-700">Mot de passe</label>
-                <input type="password" id="password" name="password" required class="mt-1 w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <label for="password" class="block text-custom">Mot de passe</label>
+                <input type="password" id="password" name="password" required class="mt-1 w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary">
             </div>
             
             <!-- Bouton de connexion -->
-            <button type="submit" class="w-full py-2 px-4 bg-blue-700 text-white rounded hover:bg-blue-800 transition">Se connecter</button>
+            <button type="submit" class="w-full py-2 px-4 bg-primary text-white rounded hover:bg-secondary transition">Se connecter</button>
         </form>
         <?php if (!empty($error_message)): ?>
             <div class="mt-4 p-2 bg-red-100 text-red-700 rounded text-center">

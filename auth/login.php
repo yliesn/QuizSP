@@ -61,23 +61,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $updateStmt->execute([$user['id']]);
            
             // Redirection vers le tableau de bord
-            redirect('dashboard.php');
+            redirect(BASE_URL . '/dashboard.php');
         } elseif ($user && !$user['actif']) {
             // Compte désactivé
             $_SESSION['error_message'] = "Votre compte est désactivé. Veuillez contacter l'administrateur.";
-            redirect('index.php');
+            redirect(BASE_URL . '/index.php');
         } else {
             // Authentification échouée
             $_SESSION['error_message'] = "Identifiant ou mot de passe incorrect";
-            redirect('index.php');
+            redirect(BASE_URL . '/index.php');
         }
     } catch (Exception $e) {
         // Log l'erreur dans un fichier plutôt que de l'afficher
         error_log('Erreur de connexion: ' . $e->getMessage());
         $_SESSION['error_message'] = "Erreur de connexion au serveur. Veuillez réessayer plus tard.";
-        redirect('index.php');
+        redirect(BASE_URL . '/index.php');
     }
 } else {
     // Si quelqu'un tente d'accéder directement à login.php
-    redirect('index.php');
+    redirect(BASE_URL . '/index.php');
 }

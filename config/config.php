@@ -7,7 +7,7 @@
 // Configurations générales
 define('APP_NAME', 'Gestion de Stock Pharmacie');
 define('APP_VERSION', '1.0.0');
-define('BASE_URL', 'https://pharmacie.nejara.fr'); // À adapter selon votre configuration
+define('BASE_URL', 'http://localhost/Pompier'); // À adapter selon votre configuration
 
 // Configurations des chemins
 define('ROOT_PATH', dirname(__DIR__));
@@ -64,7 +64,16 @@ function startSession() {
  * @param string $path Chemin relatif à rediriger
  */
 function redirect($path) {
-    header('Location: ' . BASE_URL . '/' . $path);
+    // Si $path commence déjà par http, on ne préfixe pas BASE_URL
+    if (preg_match('/^https?:\/\//', $path)) {
+        header('Location: ' . $path);
+    } else if (strpos($path, '/') === 0) {
+        // Si $path commence par un slash, on concatène BASE_URL sans slash
+        header('Location: ' . BASE_URL . $path);
+    } else {
+        // Sinon, on ajoute un slash entre BASE_URL et $path
+        header('Location: ' . BASE_URL . '/' . $path);
+    }
     exit;
 }
 

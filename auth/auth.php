@@ -33,6 +33,8 @@ function require_login() {
 function logout() {
     session_unset();
     session_destroy();
-    header('Location: /auth/index.php');
+    // header('Location: /index.php');
+    redirect(BASE_URL . '/index.php');
+
     exit();
 }

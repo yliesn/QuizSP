@@ -23,11 +23,12 @@ $role = isset($_SESSION['user_role']) ? htmlspecialchars($_SESSION['user_role'])
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="<?php echo BASE_URL; ?>/assets/css/custom.css" rel="stylesheet">
     <script src="<?php echo BASE_URL; ?>/assets/js/notifications.js"></script>
     <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' - ' : ''; ?>PharmaStock</title>
 </head>
 <body>
-    <nav class="bg-blue-700 text-white px-4 py-2">
+    <nav class="bg-primary text-white px-4 py-2">
         <div class="container mx-auto flex flex-wrap items-center justify-between">
             <a class="flex items-center gap-2 font-bold text-xl" href="<?php echo BASE_URL; ?>/dashboard.php">
                 <i class="fas fa-pills"></i>
@@ -40,7 +41,7 @@ $role = isset($_SESSION['user_role']) ? htmlspecialchars($_SESSION['user_role'])
                 <?php include __DIR__ . '/navigation.php'; ?>
                 <ul class="flex flex-col lg:flex-row lg:ml-auto gap-2 mt-4 lg:mt-0">
                     <li class="relative group">
-                        <a class="flex items-center gap-2 px-4 py-2 rounded hover:bg-blue-800 transition cursor-pointer" href="#">
+                        <a class="flex items-center gap-2 px-4 py-2 rounded hover:bg-secondary transition cursor-pointer" href="#">
                             <i class="fas fa-user"></i><?php echo $prenom . ' ' . $nom; ?>
                             <span class="ml-1 fas fa-chevron-down"></span>
                         </a>
