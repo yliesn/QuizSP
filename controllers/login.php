@@ -36,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_nom'] = $user['nom'];
             $_SESSION['user_prenom'] = $user['prenom'];
             $_SESSION['user_role'] = $user['role'];
+            $_SESSION['user_login'] = $user['login'];
             $_SESSION['login_time'] = time();
             $_SESSION['ip_address'] = $_SERVER['REMOTE_ADDR'];
             $updateStmt = $db->prepare("UPDATE user SET date_derniere_connexion = CURRENT_DATE() WHERE id = ?");

@@ -22,7 +22,9 @@ function is_logged_in() {
 function require_login() {
     if (!is_logged_in()) {
         $_SESSION['error_message'] = "Vous devez être connecté pour accéder à cette page.";
-        header('Location: /auth/index.php');
+        // header('Location: /auth/index.php');
+        redirect(BASE_URL . '/index.php');  
+
         exit();
     }
 }
