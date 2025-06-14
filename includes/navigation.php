@@ -16,7 +16,7 @@
         </button>
         <ul class="absolute left-0 mt-2 w-48 bg-white text-gray-800 rounded shadow-lg hidden z-50 dropdown-menu">
             <li><a class="block px-4 py-2 hover:bg-gray-100" href="<?php echo BASE_URL; ?>/views/users/list.php">Utilisateurs</a></li>
-            <li><a class="block px-4 py-2 hover:bg-gray-100" href="<?php echo BASE_URL; ?>/views/users/add.php">Ajouter un utilisateur</a></li>
+            <li><a class="block px-4 py-2 hover:bg-gray-100" href="<?php echo BASE_URL; ?>/views/users/create.php">Créer un utilisateur</a></li>
         </ul>
     </li>
     <?php endif; ?>

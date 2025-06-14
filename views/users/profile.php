@@ -64,6 +64,8 @@ include __DIR__ . '/../../includes/header.php';
             <div class="text-xs mb-1">
                 <?php if ($user['role'] === 'ADMIN'): ?>
                     <span class="uppercase px-2 py-1 rounded bg-red-500 text-white">Administrateur</span>
+                <?php elseif ($user['role'] === 'MODERATEUR'): ?>
+                    <span class="uppercase px-2 py-1 rounded bg-yellow-500 text-white">Modérateur</span>
                 <?php else: ?>
                     <span class="uppercase px-2 py-1 rounded bg-blue-400 text-white">Utilisateur</span>
                 <?php endif; ?>

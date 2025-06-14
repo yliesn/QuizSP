@@ -7,8 +7,8 @@ CREATE TABLE user (
     prenom VARCHAR(100) NOT NULL,
     login VARCHAR(100) NOT NULL UNIQUE,
     mot_de_passe VARCHAR(255) NOT NULL,
-    role ENUM('ADMIN', 'USER') NOT NULL DEFAULT 'USER',
+    role ENUM('ADMIN', 'USER', 'MODERATEUR') NOT NULL DEFAULT 'USER',
     actif BOOLEAN NOT NULL DEFAULT 1,
-    date_derniere_connexion DATE DEFAULT NULL,
+    date_derniere_connexion DATETIME DEFAULT NULL,
     date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

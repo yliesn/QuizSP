@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_login'] = $user['login'];
             $_SESSION['login_time'] = time();
             $_SESSION['ip_address'] = $_SERVER['REMOTE_ADDR'];
-            $updateStmt = $db->prepare("UPDATE user SET date_derniere_connexion = CURRENT_DATE() WHERE id = ?");
+            $updateStmt = $db->prepare("UPDATE user SET date_derniere_connexion = NOW() WHERE id = ?");
             $updateStmt->execute([$user['id']]);
             redirect(BASE_URL . '/dashboard.php');
         } elseif ($user && !$user['actif']) {
