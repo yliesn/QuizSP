@@ -33,12 +33,13 @@ if (isset($_SESSION['error_message'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Suppression du lien CSS Tailwind incorrect -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet"> -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="<?php echo BASE_URL; ?>/assets/css/custom.css" rel="stylesheet">
+    <!-- Correction du chemin du CSS personnalisé en relatif pour éviter le mixed content -->
+    <link href="/SaaS_pompier/assets/css/custom.css" rel="stylesheet">
 
     <title>Connexion - Gestion de Stock Pharmacie</title>
 </head>
