@@ -17,26 +17,26 @@ define('ROOT_PATH', realpath(__DIR__ . '/../../'));
 $page_title = 'Créer un quiz';
 include ROOT_PATH . '/includes/header.php';
 ?>
-<div class="container py-8">
-    <div class="quiz-container mx-auto">
-        <h1 class="text-center mb-6 font-oswald text-3xl text-secondary">Générateur de Quiz</h1>
-        <div class="quiz-info-form mb-6">
+<div class="min-h-screen flex items-center justify-center bg-custom">
+    <div class="quiz-container w-full max-w-2xl p-8 bg-white rounded-lg shadow-lg">
+        <h1 class="text-center mb-8 font-oswald text-3xl text-secondary">Générateur de Quiz</h1>
+        <div class="quiz-info-form mb-8">
             <h3 class="font-oswald text-xl mb-4">Informations Générales du Quiz</h3>
-            <div class="mb-4">
-                <label for="quizTitle" class="form-label text-custom">Titre du Quiz :</label>
-                <input type="text" id="quizTitle" class="form-control" placeholder="Ex: Quiz de sécurité incendie" required>
+            <div class="mb-6">
+                <label for="quizTitle" class="block text-custom font-semibold mb-2">Titre du Quiz :</label>
+                <input type="text" id="quizTitle" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Ex: Quiz de sécurité incendie" required>
             </div>
-            <div class="mb-4">
-                <label for="quizDescription" class="form-label text-custom">Description du Quiz :</label>
-                <textarea id="quizDescription" class="form-control" rows="4" placeholder="Ex: Ce quiz teste les connaissances fondamentales..." required></textarea>
+            <div class="mb-6">
+                <label for="quizDescription" class="block text-custom font-semibold mb-2">Description du Quiz :</label>
+                <textarea id="quizDescription" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary" rows="4" placeholder="Ex: Ce quiz teste les connaissances fondamentales..." required></textarea>
             </div>
         </div>
         <div id="quizQuestions"></div>
-        <button id="addQuestion" class="btn btn-custom-primary w-100 mb-3">Ajouter une question</button>
-        <button id="generateJson" class="btn btn-custom-primary w-100">Générer le JSON du Quiz</button>
-        <button id="downloadJson" class="btn btn-custom-download w-100 d-none">Ajouter le Quiz en BDD</button>
+        <button id="addQuestion" class="w-full py-2 px-4 bg-primary text-white rounded hover:bg-secondary transition mb-3">Ajouter une question</button>
+        <button id="generateJson" class="w-full py-2 px-4 bg-primary text-white rounded hover:bg-secondary transition mb-3">Générer le JSON du Quiz</button>
+        <button id="downloadJson" class="w-full py-2 px-4 bg-accent text-white rounded hover:bg-primary transition d-none">Ajouter le Quiz en BDD</button>
         <h2 class="text-center mt-8 mb-4 font-oswald text-xl text-secondary">JSON du Quiz Généré :</h2>
-        <pre id="jsonOutput" class="rounded p-4"></pre>
+        <pre id="jsonOutput" class="rounded p-4 bg-gray-800 text-gray-100"></pre>
     </div>
 </div>
 <script>
@@ -58,43 +58,45 @@ let quizData = {
             questionForm.dataset.id = questionIdCounter++;
 
             questionForm.innerHTML = `
-                <h3 class="font-oswald">Question n°${questionForm.dataset.id}</h3>
-                <div class="mb-3">
-                    <label for="questionText_${questionForm.dataset.id}" class="form-label">Question :</label>
-                    <textarea id="questionText_${questionForm.dataset.id}" class="form-control" rows="3" placeholder="Entrez la question..." required></textarea>
-                </div>
-
-                <div class="mb-3">
-                    <label for="questionType_${questionForm.dataset.id}" class="form-label">Type de question :</label>
-                    <select id="questionType_${questionForm.dataset.id}" class="form-select" onchange="toggleOptionsAndCorrectAnswerInput(this.value, ${questionForm.dataset.id})">
-                        <option value="choix_multiple">Choix Multiple</option>
-                        <option value="texte">Texte</option>
-                    </select>
-                </div>
-
-                <div id="optionsContainer_${questionForm.dataset.id}" class="options-container mb-3">
-                    <label class="form-label">Options (pour choix multiple) :</label>
-                    <div id="optionsList_${questionForm.dataset.id}">
-                        <div class="option-item">
-                            <input type="text" class="form-control option-input" placeholder="Option 1" oninput="updateCorrectAnswersSelection(${questionForm.dataset.id})">
-                            <button type="button" class="btn btn-sm btn-custom-danger remove-option ms-2">Supprimer</button>
-                        </div>
+                <div class="bg-light-gray p-4 rounded mb-6 border">
+                    <h3 class="font-oswald">Question n°${questionForm.dataset.id}</h3>
+                    <div class="mb-3">
+                        <label for="questionText_${questionForm.dataset.id}" class="form-label">Question :</label>
+                        <textarea id="questionText_${questionForm.dataset.id}" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary" rows="3" placeholder="Entrez la question..." required></textarea>
                     </div>
-                    <button type="button" class="btn btn-sm btn-success add-option mt-2">Ajouter une option</button>
-                </div>
 
-                <div id="correctAnswersSelectionContainer_${questionForm.dataset.id}" class="correct-answers-selection-container mb-3">
-                    <label class="form-label">Réponse(s) correcte(s) (sélectionnez parmi les options) :</label>
-                    <div id="correctAnswersCheckboxes_${questionForm.dataset.id}" class="form-check-group">
+                    <div class="mb-3">
+                        <label for="questionType_${questionForm.dataset.id}" class="form-label">Type de question :</label>
+                        <select id="questionType_${questionForm.dataset.id}" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary" onchange="toggleOptionsAndCorrectAnswerInput(this.value, ${questionForm.dataset.id})">
+                            <option value="choix_multiple">Choix Multiple</option>
+                            <option value="texte">Texte</option>
+                        </select>
+                    </div>
+
+                    <div id="optionsContainer_${questionForm.dataset.id}" class="options-container mb-3">
+                        <label class="form-label">Options (pour choix multiple) :</label>
+                        <div id="optionsList_${questionForm.dataset.id}">
+                            <div class="option-item">
+                                <input type="text" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary option-input" placeholder="Option 1" oninput="updateCorrectAnswersSelection(${questionForm.dataset.id})">
+                                <button type="button" class="btn btn-sm py-2 px-4 bg-secondary text-white rounded hover:bg-danger transition remove-option ms-2">Supprimer</button>
+                            </div>
                         </div>
-                </div>
+                        <button type="button" class="btn btn-sm py-2 px-4 bg-primary text-white rounded hover:bg-secondary transition mt-2 add-option">Ajouter une option</button>
+                    </div>
 
-                <div id="textCorrectAnswerContainer_${questionForm.dataset.id}" class="correct-answers-selection-container hidden mb-3">
-                    <label for="textCorrectAnswer_${questionForm.dataset.id}" class="form-label">Réponse correcte (pour texte) :</label>
-                    <input type="text" id="textCorrectAnswer_${questionForm.dataset.id}" class="form-control" placeholder="Entrez la réponse correcte">
-                </div>
+                    <div id="correctAnswersSelectionContainer_${questionForm.dataset.id}" class="correct-answers-selection-container mb-3">
+                        <label class="form-label">Réponse(s) correcte(s) (sélectionnez parmi les options) :</label>
+                        <div id="correctAnswersCheckboxes_${questionForm.dataset.id}" class="form-check-group">
+                            </div>
+                    </div>
 
-                <button type="button" class="btn btn-custom-danger remove-question mt-3 w-100">Supprimer cette question</button>
+                    <div id="textCorrectAnswerContainer_${questionForm.dataset.id}" class="correct-answers-selection-container hidden mb-3">
+                        <label for="textCorrectAnswer_${questionForm.dataset.id}" class="form-label">Réponse correcte (pour texte) :</label>
+                        <input type="text" id="textCorrectAnswer_${questionForm.dataset.id}" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Entrez la réponse correcte">
+                    </div>
+
+                    <button type="button" class="btn btn-custom-danger remove-question mt-3 w-100 py-2 px-4 bg-secondary text-white rounded hover:bg-danger transition">Supprimer cette question</button>
+                </div>
             `;
             quizQuestionsDiv.appendChild(questionForm);
 
@@ -185,8 +187,8 @@ let quizData = {
             const optionItem = document.createElement('div');
             optionItem.classList.add('option-item');
             optionItem.innerHTML = `
-                <input type="text" class="form-control option-input" placeholder="Nouvelle option" oninput="updateCorrectAnswersSelection(${questionId})">
-                <button type="button" class="btn btn-sm btn-custom-danger remove-option ms-2">Supprimer</button>
+                <input type="text" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary option-input" placeholder="Nouvelle option" oninput="updateCorrectAnswersSelection(${questionId})">
+                <button type="button" class="btn btn-sm py-2 px-4 bg-secondary text-white rounded hover:bg-danger transition remove-option ms-2">Supprimer</button>
             `;
             optionsList.appendChild(optionItem);
         }
