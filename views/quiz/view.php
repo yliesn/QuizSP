@@ -118,7 +118,7 @@ $user_id = $_SESSION['user_id'];
     <div id="result-container" class="result-container p-6 rounded-lg shadow text-center mt-8 d-none">
         <h2 class="font-oswald text-2xl mb-4">Résultat du Quiz</h2>
         <p>Score : <span id="score"></span> / <span id="total-questions"></span></p>
-        <button id="restart-button" class="btn-lg btn-outline-secondary mt-4">Recommencer</button>
+        <!-- <button id="restart-button" class="btn-lg btn-outline-secondary mt-4">Recommencer</button> -->
         <a href="list.php" class="inline-block mt-6 px-6 py-2 bg-primary text-white rounded hover:bg-secondary transition">Retour à la liste des quiz</a>
     </div>
 </div>
@@ -151,7 +151,6 @@ const submitButton = document.getElementById('submit-button');
 const resultContainer = document.getElementById('result-container');
 const scoreSpan = document.getElementById('score');
 const totalQuestionsSpan = document.getElementById('total-questions');
-const restartButton = document.getElementById('restart-button');
 
 function startQuiz() {
     currentQuestionIndex = 0;
@@ -356,10 +355,6 @@ submitButton.addEventListener('click', () => {
     } else {
         alert("Veuillez sélectionner ou saisir votre réponse avant de voir les résultats.");
     }
-});
-
-restartButton.addEventListener('click', () => {
-    startQuiz();
 });
 
 // Lancer le quiz au chargement
