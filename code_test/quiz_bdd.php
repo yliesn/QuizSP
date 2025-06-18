@@ -232,38 +232,38 @@ function checkAnswer() {
     const currentQuestion = questions[currentQuestionIndex];
     let isCorrect = false;
     if (currentQuestion.type === 'choix_multiple') {
-        const correctSet = new Set(currentQuestion.reponse_correcte.map(String));
-        const selectedSet = new Set(selectedAnswers.map(String));
-        isCorrect = (correctSet.size === selectedSet.size) && Array.from(selectedSet).every(answer => correctSet.has(answer));
+        // Comparaison stricte des ensembles (ordre et doublons ignorés)
+        const correctSet = new Set(currentQuestion.reponse_correcte.map(ans => String(ans).trim()));
+        const selectedSet = new Set(selectedAnswers.map(ans => String(ans).trim()));
+        isCorrect = (correctSet.size === selectedSet.size) &&
+            Array.from(correctSet).every(val => selectedSet.has(val));
         const buttons = document.querySelectorAll('.option-button');
         buttons.forEach(button => {
             button.disabled = true;
-            const optionValue = button.dataset.answer;
-            if (currentQuestion.reponse_correcte.includes(optionValue)) {
+            const optionValue = String(button.dataset.answer).trim();
+            if (correctSet.has(optionValue)) {
                 button.classList.remove('btn-outline-secondary', 'btn-primary', 'incorrect');
                 button.classList.add('correct', 'btn-success');
-            } else if (selectedAnswers.includes(optionValue) && !currentQuestion.reponse_correcte.includes(optionValue)) {
+            } else if (selectedSet.has(optionValue) && !correctSet.has(optionValue)) {
                 button.classList.remove('btn-outline-secondary', 'btn-primary', 'correct');
                 button.classList.add('incorrect', 'btn-danger');
             } else {
                 button.classList.remove('btn-primary', 'correct', 'incorrect');
                 button.classList.add('btn-outline-secondary');
-                if (!isCorrect && currentQuestion.reponse_correcte.includes(optionValue)) {
-                    button.classList.add('btn-success', 'correct');
-                }
             }
         });
     } else if (currentQuestion.type === 'choix_unique') {
-        const correct = String(currentQuestion.reponse_correcte[0]);
-        isCorrect = selectedAnswers.length === 1 && String(selectedAnswers[0]) === correct;
+        const correct = String(currentQuestion.reponse_correcte[0]).trim();
+        const selected = selectedAnswers.length === 1 ? String(selectedAnswers[0]).trim() : '';
+        isCorrect = selected === correct;
         const buttons = document.querySelectorAll('.option-button');
         buttons.forEach(button => {
             button.disabled = true;
-            const optionValue = button.dataset.answer;
+            const optionValue = String(button.dataset.answer).trim();
             if (optionValue === correct) {
                 button.classList.remove('btn-outline-secondary', 'btn-primary', 'incorrect');
                 button.classList.add('correct', 'btn-success');
-            } else if (selectedAnswers.includes(optionValue) && optionValue !== correct) {
+            } else if (selected === optionValue && optionValue !== correct) {
                 button.classList.remove('btn-outline-secondary', 'btn-primary', 'correct');
                 button.classList.add('incorrect', 'btn-danger');
             } else {
@@ -289,6 +289,7 @@ function checkAnswer() {
             }
         }
     }
+    // Incrémenter le score uniquement si la réponse est correcte
     if (isCorrect) {
         score++;
     }
