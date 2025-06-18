@@ -39,8 +39,7 @@ if (isset($_SESSION['error_message'])) {
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Correction du chemin du CSS personnalisé en relatif pour éviter le mixed content -->
-    <link href="/SaaS_pompier/assets/css/custom.css" rel="stylesheet">
-
+    <link href="<?php echo BASE_URL; ?>/assets/css/custom.css" rel="stylesheet">
     <title>Connexion - Gestion de Stock Pharmacie</title>
 </head>
 <body class="bg-custom min-h-screen flex items-center justify-center">
