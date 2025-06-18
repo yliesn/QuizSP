@@ -179,7 +179,7 @@ function displayQuestion() {
                 optionsContainer.appendChild(button);
             });
         } else if (currentQuestion.type === 'choix_unique') {
-            currentQuestion.options.forEach option => {
+            currentQuestion.options.forEach(option => {
                 const button = document.createElement('button');
                 button.className = 'option-button btn btn-outline-secondary text-start w-100';
                 button.textContent = option;
@@ -232,23 +232,25 @@ function checkAnswer() {
     const currentQuestion = questions[currentQuestionIndex];
     let isCorrect = false;
     if (currentQuestion.type === 'choix_multiple') {
-        // Correction : bien comparer les valeurs sélectionnées (string) et les bonnes réponses (string)
         const correctSet = new Set(currentQuestion.reponse_correcte.map(String));
         const selectedSet = new Set(selectedAnswers.map(String));
-        isCorrect = (correctSet.size === selectedSet.size) && Array.from(correctSet).every(answer => selectedSet.has(answer));
+        isCorrect = (correctSet.size === selectedSet.size) && Array.from(selectedSet).every(answer => correctSet.has(answer));
         const buttons = document.querySelectorAll('.option-button');
         buttons.forEach(button => {
             button.disabled = true;
-            const optionValue = String(button.dataset.answer);
-            if (correctSet.has(optionValue)) {
+            const optionValue = button.dataset.answer;
+            if (currentQuestion.reponse_correcte.includes(optionValue)) {
                 button.classList.remove('btn-outline-secondary', 'btn-primary', 'incorrect');
                 button.classList.add('correct', 'btn-success');
-            } else if (selectedSet.has(optionValue) && !correctSet.has(optionValue)) {
+            } else if (selectedAnswers.includes(optionValue) && !currentQuestion.reponse_correcte.includes(optionValue)) {
                 button.classList.remove('btn-outline-secondary', 'btn-primary', 'correct');
                 button.classList.add('incorrect', 'btn-danger');
             } else {
                 button.classList.remove('btn-primary', 'correct', 'incorrect');
                 button.classList.add('btn-outline-secondary');
+                if (!isCorrect && currentQuestion.reponse_correcte.includes(optionValue)) {
+                    button.classList.add('btn-success', 'correct');
+                }
             }
         });
     } else if (currentQuestion.type === 'choix_unique') {
@@ -257,7 +259,7 @@ function checkAnswer() {
         const buttons = document.querySelectorAll('.option-button');
         buttons.forEach(button => {
             button.disabled = true;
-            const optionValue = String(button.dataset.answer);
+            const optionValue = button.dataset.answer;
             if (optionValue === correct) {
                 button.classList.remove('btn-outline-secondary', 'btn-primary', 'incorrect');
                 button.classList.add('correct', 'btn-success');
