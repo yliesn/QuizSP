@@ -1,5 +1,8 @@
 <?php
-// code_test/save_result.php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Enregistre le score d'un utilisateur pour un quiz (appel AJAX)
 require_once dirname(__DIR__, 2) . '/config/config.php';
 require_once dirname(__DIR__, 2) . '/auth/auth.php';
@@ -46,6 +49,7 @@ $ok = $stmt->execute([$user_id, $quizz_id, $score]);
 if ($ok) {
     echo json_encode(['success' => true]);
 } else {
+    error_log('Erreur SQL : ' . implode(' | ', $stmt->errorInfo()));
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Erreur lors de l\'enregistrement']);
 }

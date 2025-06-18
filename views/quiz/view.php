@@ -157,14 +157,14 @@ if (!in_array($user_role, ['admin', 'moderateur'])) {
         <button id="next-button" class="btn-lg btn-primary">Suivant</button>
         <button id="submit-button" class="btn-lg btn-success d-none">Voir les résultats</button>
     </div>
-    <div id="result-container" class="result-container p-6 rounded-lg shadow text-center mt-8 d-none" style="max-width:420px;margin:2.5em auto 0 auto;background:linear-gradient(135deg,#f8fafc 60%,#e3f6fd 100%);box-shadow:0 8px 32px rgba(44,62,80,0.13);border-radius:1.2em;border:1.5px solid #b2d6e6;">
+    <div id="result-container" class="result-container p-6 rounded-lg shadow text-center mt-8 d-none" style="max-width:420px;margin:2.5em auto 0 auto;background:#181c24;box-shadow:0 8px 32px rgba(44,62,80,0.13);border-radius:1.2em;border:1.5px solid #23272f;">
         <div id="result-icon"></div>
-        <h2 class="font-oswald text-2xl mb-4" style="color:#1a6fa3;letter-spacing:1px;">Résultat du Quiz</h2>
+        <h2 class="font-oswald text-2xl mb-4" style="color:#fff;letter-spacing:1px;">Résultat du Quiz</h2>
         <div style="margin-bottom:1.5em;">
-            <span id="score-badge" style="display:inline-block;padding:0.7em 1.5em;font-size:1.5em;font-weight:bold;border-radius:2em;background:#eafaf1;color:#1abc9c;box-shadow:0 2px 8px #b2d6e6;vertical-align:middle;"></span>
-            <span style="font-size:1.1em;color:#888;margin-left:0.7em;">/ <span id="total-questions"></span></span>
+            <span id="score-badge" style="font-size:1.1em;color:#aaa;margin-left:0.7em;"></span>
+            <span style="font-size:1.1em;color:#aaa;margin-left:0.7em;">/ <span id="total-questions"></span></span>
         </div>
-        <div id="result-message" style="font-size:1.1em;margin-bottom:1.5em;color:#34495e;"></div>
+        <!-- <div id="result-message" style="font-size:1.1em;margin-bottom:1.5em;color:#fff;"></div> -->
         <a href="list.php" class="inline-block mt-6 px-6 py-2" style="background:#e74c3c;color:#fff;border-radius:2em;font-weight:bold;text-decoration:none;box-shadow:0 2px 8px #f5b7b1;transition:background 0.2s;">← Retour à la liste des quiz</a>
     </div>
 </div>
@@ -195,7 +195,7 @@ const optionsContainer = document.getElementById('options-container');
 const nextButton = document.getElementById('next-button');
 const submitButton = document.getElementById('submit-button');
 const resultContainer = document.getElementById('result-container');
-const scoreSpan = document.getElementById('score');
+const scoreSpan = document.getElementById('score-badge');
 const totalQuestionsSpan = document.getElementById('total-questions');
 
 function startQuiz() {
@@ -354,37 +354,22 @@ function showResults() {
     resultContainer.classList.remove('d-none');
     scoreSpan.textContent = score;
     totalQuestionsSpan.textContent = questions.length;
-    // Badge score stylé
-    const badge = document.getElementById('score-badge');
-    badge.textContent = score;
-    if (score === questions.length) {
-        badge.style.background = '#eafaf1';
-        badge.style.color = '#1abc9c';
-    } else if (score >= Math.ceil(questions.length * 0.7)) {
-        badge.style.background = '#fffbe6';
-        badge.style.color = '#f39c12';
-    } else {
-        badge.style.background = '#fdeaea';
-        badge.style.color = '#e74c3c';
-    }
     // Message et icône
     const msg = document.getElementById('result-message');
     const icon = document.getElementById('result-icon');
-    if (score === questions.length) {
-        msg.textContent = 'Bravo ! Score parfait !';
-        icon.innerHTML = '<svg width="48" height="48" fill="none" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#eafaf1" stroke="#1abc9c" stroke-width="3"/><path d="M15 25l6 6 12-14" stroke="#1abc9c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    } else if (score >= Math.ceil(questions.length * 0.7)) {
-        msg.textContent = 'Bien joué ! Vous avez un bon score.';
-        icon.innerHTML = '<svg width="48" height="48" fill="none" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#fffbe6" stroke="#f39c12" stroke-width="3"/><path d="M15 25l6 6 12-14" stroke="#f39c12" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    } else {
-        msg.textContent = 'Vous pouvez faire mieux, réessayez !';
-        icon.innerHTML = '<svg width="48" height="48" fill="none" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#fdeaea" stroke="#e74c3c" stroke-width="3"/><path d="M17 31l14-14M31 31L17 17" stroke="#e74c3c" stroke-width="3" stroke-linecap="round"/></svg>';
-    }
+    msg.textContent = `Votre score : ${score} / ${questions.length}`;
+    icon.innerHTML = '';
     // Enregistrer le score en BDD via AJAX
     fetch('save_result.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id, quizz_id, score })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            alert('Erreur lors de l\'enregistrement du score : ' + (data.message || ''));
+        }
     });
 }
 

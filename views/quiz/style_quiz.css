@@ -193,7 +193,7 @@ h2 {
     color: var(--bs-text-dark);
 }
 
-#score, #total-questions {
+#score, #total-questions, #score-badge {
     font-size: 2em !important;
     color: var(--bs-primary-blue) !important;
 }
