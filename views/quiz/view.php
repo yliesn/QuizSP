@@ -5,8 +5,8 @@
 // error_reporting(E_ALL);
 
 require_once dirname(__DIR__, 2) . '/config/config.php';
-require_once __DIR__ . '/../auth/auth.php';
-require_once ROOT_PATH . '/config/database.php';
+require_once dirname(__DIR__, 2) . '/auth/auth.php';
+require_once dirname(__DIR__, 2) . '/config/database.php';
 require_login();
 
 // Récupérer l'id du quiz à jouer
