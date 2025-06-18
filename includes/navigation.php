@@ -30,6 +30,13 @@
             <i class="fas fa-list mr-1"></i> Liste des quiz
         </a>
     </li>
+    <?php if (isset($_SESSION['user_role']) && in_array($_SESSION['user_role'], ['ADMIN', 'MODERATEUR'])): ?>
+    <li>
+        <a class="px-4 py-2 rounded hover:bg-secondary transition flex items-center gap-2" href="<?php echo BASE_URL; ?>/views/quiz/results.php">
+            <i class="fas fa-poll mr-1"></i> Résultats quiz
+        </a>
+    </li>
+    <?php endif; ?>
 </ul>
 <ul class="flex flex-col lg:flex-row gap-2 ml-auto">
     <li class="relative dropdown-parent" id="user-menu-parent">
