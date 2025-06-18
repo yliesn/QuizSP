@@ -2,7 +2,7 @@
 // Affichage d'un quiz depuis la BDD et enregistrement du résultat
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../auth/auth.php';
-require_once __DIR__ . '/../config/database.php';
+require_once ROOT_PATH . '/config/database.php';
 require_login();
 
 // Récupérer l'id du quiz à jouer
@@ -47,7 +47,7 @@ $user_id = $_SESSION['user_id'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($quiz['titre']); ?> - Quiz</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style_quiz.css">
     <style>
         body {
             min-height: 100vh;
@@ -301,6 +301,7 @@ function checkAnswer() {
 
 function showResults() {
     questionContainer.classList.add('d-none');
+    submitButton.classList.add('d-none');
     resultContainer.classList.remove('d-none');
     scoreSpan.textContent = score;
     totalQuestionsSpan.textContent = questions.length;
