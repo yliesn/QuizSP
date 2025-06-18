@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['error_message'] = "Les mots de passe ne correspondent pas.";
         redirect(BASE_URL . '/views/users/create.php');
     }
-    if (strlen($password) < 8) {
+    if (strlen($password) < 4) {
         $_SESSION['error_message'] = "Le mot de passe doit contenir au moins 8 caractères.";
         redirect(BASE_URL . '/views/users/create.php');
     }

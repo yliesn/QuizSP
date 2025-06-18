@@ -42,8 +42,8 @@ include __DIR__ . '/../../includes/header.php';
         </div>
         <div>
             <label for="password" class="block text-custom">Mot de passe</label>
-            <input type="password" id="password" name="password" minlength="8" required class="mt-1 w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary">
-            <div class="text-xs text-gray-400">Au moins 8 caractères.</div>
+            <input type="password" id="password" name="password" minlength="4" required class="mt-1 w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary">
+            <div class="text-xs text-gray-400">Au moins 4 caractères.</div>
         </div>
         <div>
             <label for="confirm_password" class="block text-custom">Confirmer le mot de passe</label>
