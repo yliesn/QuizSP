@@ -38,7 +38,7 @@ include __DIR__ . '/includes/header.php';
                 <div class="font-bold text-lg">Créer un utilisateur</div>
                 <div class="text-gray-600 text-sm">Ajout rapide d'un nouveau compte</div>
             </a>
-            <a href="<?php echo BASE_URL; ?>/README.md" class="dashboard-card">
+            <a href="<?php echo BASE_URL; ?>/views/aide.php" class="dashboard-card">
                 <div class="icon-circle bg-gray-700"><i class="fas fa-question-circle"></i></div>
                 <div class="font-bold text-lg">Aide & Support</div>
                 <div class="text-gray-600 text-sm">Documentation, contact, FAQ</div>
@@ -61,7 +61,7 @@ include __DIR__ . '/includes/header.php';
                 <div class="font-bold text-lg">Mon profil</div>
                 <div class="text-gray-600 text-sm">Gérer mes informations personnelles</div>
             </a>
-            <a href="<?php echo BASE_URL; ?>/README.md" class="dashboard-card">
+            <a href="<?php echo BASE_URL; ?>/views/aide.php" class="dashboard-card">
                 <div class="icon-circle bg-gray-700"><i class="fas fa-question-circle"></i></div>
                 <div class="font-bold text-lg">Aide & Support</div>
                 <div class="text-gray-600 text-sm">Documentation, contact, FAQ</div>
