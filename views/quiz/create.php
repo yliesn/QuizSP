@@ -1,7 +1,20 @@
 <?php
-define('ROOT_PATH', realpath(__DIR__ . '/../../'));
+// Page de création d'utilisateur (admin)
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../auth/auth.php';
+require_login();
+
+// Vérifier le rôle admin
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'ADMIN') {
+    $_SESSION['error_message'] = "Accès refusé.";
+    redirect(BASE_URL . '/dashboard.php');
+}
+
+// Générer un token CSRF
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+
 $page_title = 'Créer un quiz';
-include ROOT_PATH . '/includes/header.php';
+include __DIR__ . '/../../includes/header.php';
 ?>
 <div class="container py-5">
     <div class="quiz-container mx-auto">
