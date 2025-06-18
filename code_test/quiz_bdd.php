@@ -48,13 +48,63 @@ $user_id = $_SESSION['user_id'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($quiz['titre']); ?> - Quiz</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bs-dark-blue);
+        }
+        .quiz-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px rgba(44,62,80,0.15);
+            padding: 2.5rem 2rem 2rem 2rem;
+        }
+        .question-container {
+            background: var(--bs-light-gray);
+            border-radius: 0.75rem;
+            border: 1.5px solid #bdc3c7;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.07);
+        }
+        .option-button {
+            margin-bottom: 1rem;
+            font-size: 1.1em;
+            padding: 1rem 1.2rem;
+            border-radius: 0.5rem;
+            border-width: 2px;
+            transition: all 0.2s;
+        }
+        .option-button.selected {
+            font-weight: bold;
+            box-shadow: 0 0 0 2px var(--bs-primary-blue);
+        }
+        .option-button.correct {
+            font-weight: bold;
+            box-shadow: 0 0 0 2px var(--bs-success-green);
+        }
+        .option-button.incorrect {
+            font-weight: bold;
+            box-shadow: 0 0 0 2px var(--bs-danger-red);
+        }
+        .btn-lg {
+            min-width: 180px;
+        }
+        @media (max-width: 600px) {
+            .quiz-container { padding: 1rem; }
+        }
+    </style>
 </head>
 <body>
-<div class="quiz-container mx-auto mt-10">
-    <h1 id="quiz-title" class="text-center font-oswald mb-2"><?php echo htmlspecialchars($quiz['titre']); ?></h1>
-    <p id="quiz-description" class="text-center mb-6"><?php echo htmlspecialchars($quiz['description']); ?></p>
+<div class="quiz-container">
+    <h1 id="quiz-title" class="text-center font-oswald mb-2" style="color:var(--bs-firefighter-red)"><?php echo htmlspecialchars($quiz['titre']); ?></h1>
+    <p id="quiz-description" class="text-center mb-6" style="color:var(--bs-text-dark)"><?php echo htmlspecialchars($quiz['description']); ?></p>
     <div id="question-container" class="question-container p-6 mb-6 animate">
-        <div id="question-text" class="mb-4 font-bold"></div>
+        <div id="question-text" class="mb-4 font-bold text-lg"></div>
         <div id="options-container"></div>
     </div>
     <div class="flex justify-center gap-4">
