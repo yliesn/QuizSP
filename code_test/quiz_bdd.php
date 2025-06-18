@@ -39,40 +39,7 @@ foreach ($questions as $q) {
 
 $user_id = $_SESSION['user_id'];
 
-// Gestion de la soumission du quiz
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $score = 0;
-    $total = count($questions_full);
-    foreach ($questions_full as $idx => $q) {
-        $user_answer = $_POST['q_' . $q['id']] ?? null;
-        $type = count(array_filter($q['reponses'], fn($r) => $r['est_correcte'])) > 1 ? 'choix_multiple' : (count($q['reponses']) > 1 ? 'choix_unique' : 'texte');
-        if ($type === 'choix_multiple') {
-            $corrects = array_map(fn($r) => $r['texte_reponse'], array_filter($q['reponses'], fn($r) => $r['est_correcte']));
-            $user_answer = isset($_POST['q_' . $q['id']]) ? (array)$_POST['q_' . $q['id']] : [];
-            if (count($user_answer) === count($corrects) && !array_diff($user_answer, $corrects) && !array_diff($corrects, $user_answer)) {
-                $score++;
-            }
-        } elseif ($type === 'texte') {
-            $correct = $q['reponses'][0]['texte_reponse'];
-            if (trim(mb_strtolower($user_answer)) === trim(mb_strtolower($correct))) {
-                $score++;
-            }
-        } else { // choix unique
-            $correct = null;
-            foreach ($q['reponses'] as $r) {
-                if ($r['est_correcte']) $correct = $r['texte_reponse'];
-            }
-            if ($user_answer === $correct) {
-                $score++;
-            }
-        }
-    }
-    // Stocker le résultat
-    $stmt = $pdo->prepare('INSERT INTO resultat_quiz (user_id, quizz_id, score) VALUES (?, ?, ?)');
-    $stmt->execute([$user_id, $quizz_id, $score]);
-    echo '<div class="result-container p-6 rounded-lg shadow text-center mt-8"><h2 class="font-oswald text-2xl mb-4">Résultat du Quiz</h2><p>Score : <span id="score">' . $score . '</span> / <span id="total-questions">' . $total . '</span></p><a href="list.php" class="inline-block mt-6 px-6 py-2 bg-primary text-white rounded hover:bg-secondary transition">Retour à la liste des quiz</a></div>';
-    exit;
-}
+// Générer le quiz en JS (affichage dynamique)
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -86,35 +53,264 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="quiz-container mx-auto mt-10">
     <h1 id="quiz-title" class="text-center font-oswald mb-2"><?php echo htmlspecialchars($quiz['titre']); ?></h1>
     <p id="quiz-description" class="text-center mb-6"><?php echo htmlspecialchars($quiz['description']); ?></p>
-    <form method="post">
-        <?php foreach ($questions_full as $idx => $q): ?>
-        <div class="question-container p-6 mb-6 animate">
-            <div id="question-text" class="mb-4 font-bold"><?php echo ($idx+1) . '. ' . htmlspecialchars($q['texte_question']); ?></div>
-            <div id="options-container">
-                <?php
-                $correct_count = count(array_filter($q['reponses'], fn($r) => $r['est_correcte']));
-                if ($correct_count > 1) {
-                    // Choix multiple
-                    foreach ($q['reponses'] as $r) {
-                        echo '<label class="block mb-2"><input type="checkbox" name="q_' . $q['id'] . '[]" value="' . htmlspecialchars($r['texte_reponse']) . '" class="option-button mr-2"> ' . htmlspecialchars($r['texte_reponse']) . '</label>';
-                    }
-                } elseif (count($q['reponses']) > 1) {
-                    // Choix unique
-                    foreach ($q['reponses'] as $r) {
-                        echo '<label class="block mb-2"><input type="radio" name="q_' . $q['id'] . '" value="' . htmlspecialchars($r['texte_reponse']) . '" class="option-button mr-2"> ' . htmlspecialchars($r['texte_reponse']) . '</label>';
-                    }
-                } else {
-                    // Texte libre
-                    echo '<input type="text" name="q_' . $q['id'] . '" class="text-input" placeholder="Votre réponse...">';
-                }
-                ?>
-            </div>
-        </div>
-        <?php endforeach; ?>
-        <div class="flex justify-center">
-            <button type="submit" class="btn-lg btn-primary">Valider mes réponses</button>
-        </div>
-    </form>
+    <div id="question-container" class="question-container p-6 mb-6 animate">
+        <div id="question-text" class="mb-4 font-bold"></div>
+        <div id="options-container"></div>
+    </div>
+    <div class="flex justify-center gap-4">
+        <button id="next-button" class="btn-lg btn-primary">Suivant</button>
+        <button id="submit-button" class="btn-lg btn-success d-none">Voir les résultats</button>
+    </div>
+    <div id="result-container" class="result-container p-6 rounded-lg shadow text-center mt-8 d-none">
+        <h2 class="font-oswald text-2xl mb-4">Résultat du Quiz</h2>
+        <p>Score : <span id="score"></span> / <span id="total-questions"></span></p>
+        <button id="restart-button" class="btn-lg btn-outline-secondary mt-4">Recommencer</button>
+        <a href="list.php" class="inline-block mt-6 px-6 py-2 bg-primary text-white rounded hover:bg-secondary transition">Retour à la liste des quiz</a>
+    </div>
 </div>
+<script>
+// Générer les données du quiz depuis PHP vers JS
+const questions = <?php echo json_encode(array_map(function($q) {
+    $type = count(array_filter($q['reponses'], fn($r) => $r['est_correcte'])) > 1 ? 'choix_multiple' : (count($q['reponses']) > 1 ? 'choix_unique' : 'texte');
+    return [
+        'id' => $q['id'],
+        'question' => $q['texte_question'],
+        'type' => $type,
+        'options' => $type !== 'texte' ? array_map(fn($r) => $r['texte_reponse'], $q['reponses']) : [],
+        'reponse_correcte' => $type === 'choix_multiple' ? array_values(array_map(fn($r) => $r['texte_reponse'], array_filter($q['reponses'], fn($r) => $r['est_correcte']))) : ($type === 'texte' ? $q['reponses'][0]['texte_reponse'] : array_values(array_map(fn($r) => $r['texte_reponse'], array_filter($q['reponses'], fn($r) => $r['est_correcte'])))),
+    ];
+}, $questions_full)); ?>;
+const quizz_id = <?php echo (int)$quizz_id; ?>;
+const user_id = <?php echo (int)$user_id; ?>;
+</script>
+<script>
+// --- Version JS inspirée de script.js (lecture BDD) ---
+let currentQuestionIndex = 0;
+let score = 0;
+let selectedAnswers = [];
+
+const questionContainer = document.getElementById('question-container');
+const questionText = document.getElementById('question-text');
+const optionsContainer = document.getElementById('options-container');
+const nextButton = document.getElementById('next-button');
+const submitButton = document.getElementById('submit-button');
+const resultContainer = document.getElementById('result-container');
+const scoreSpan = document.getElementById('score');
+const totalQuestionsSpan = document.getElementById('total-questions');
+const restartButton = document.getElementById('restart-button');
+
+function startQuiz() {
+    currentQuestionIndex = 0;
+    score = 0;
+    resultContainer.classList.add('d-none');
+    questionContainer.classList.remove('d-none');
+    submitButton.classList.add('d-none');
+    nextButton.classList.remove('d-none');
+    displayQuestion();
+}
+
+function displayQuestion() {
+    if (currentQuestionIndex < questions.length) {
+        const currentQuestion = questions[currentQuestionIndex];
+        // Animation
+        questionContainer.classList.remove('animate');
+        void questionContainer.offsetWidth;
+        questionContainer.classList.add('animate');
+        questionText.textContent = currentQuestion.question;
+        optionsContainer.innerHTML = '';
+        selectedAnswers = [];
+        if (currentQuestion.type === 'choix_multiple') {
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-button btn btn-outline-secondary text-start w-100';
+                button.textContent = option;
+                button.dataset.answer = option;
+                button.onclick = () => toggleOption(button, option);
+                optionsContainer.appendChild(button);
+            });
+        } else if (currentQuestion.type === 'choix_unique') {
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-button btn btn-outline-secondary text-start w-100';
+                button.textContent = option;
+                button.dataset.answer = option;
+                button.onclick = () => selectUniqueOption(button, option);
+                optionsContainer.appendChild(button);
+            });
+        } else if (currentQuestion.type === 'texte') {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'text-input form-control form-control-lg';
+            input.placeholder = 'Saisissez votre réponse ici...';
+            input.oninput = (e) => selectedAnswers = [e.target.value.trim()];
+            optionsContainer.appendChild(input);
+        }
+        // Boutons
+        if (currentQuestionIndex === questions.length - 1) {
+            nextButton.classList.add('d-none');
+            submitButton.classList.remove('d-none');
+        } else {
+            nextButton.classList.remove('d-none');
+            submitButton.classList.add('d-none');
+        }
+    }
+}
+
+function toggleOption(clickedButton, answer) {
+    if (clickedButton.classList.contains('selected')) {
+        clickedButton.classList.remove('selected', 'btn-primary');
+        clickedButton.classList.add('btn-outline-secondary');
+        selectedAnswers = selectedAnswers.filter(item => item !== answer);
+    } else {
+        clickedButton.classList.add('selected', 'btn-primary');
+        clickedButton.classList.remove('btn-outline-secondary');
+        selectedAnswers.push(answer);
+    }
+}
+function selectUniqueOption(clickedButton, answer) {
+    // Un seul choix possible
+    selectedAnswers = [answer];
+    document.querySelectorAll('.option-button').forEach(btn => {
+        btn.classList.remove('selected', 'btn-primary');
+        btn.classList.add('btn-outline-secondary');
+    });
+    clickedButton.classList.add('selected', 'btn-primary');
+    clickedButton.classList.remove('btn-outline-secondary');
+}
+
+function checkAnswer() {
+    const currentQuestion = questions[currentQuestionIndex];
+    let isCorrect = false;
+    if (currentQuestion.type === 'choix_multiple') {
+        const correctSet = new Set(currentQuestion.reponse_correcte);
+        const selectedSet = new Set(selectedAnswers);
+        isCorrect = (correctSet.size === selectedSet.size) && Array.from(selectedSet).every(answer => correctSet.has(answer));
+        const buttons = document.querySelectorAll('.option-button');
+        buttons.forEach(button => {
+            button.disabled = true;
+            const optionValue = button.dataset.answer;
+            if (currentQuestion.reponse_correcte.includes(optionValue)) {
+                button.classList.remove('btn-outline-secondary', 'btn-primary', 'incorrect');
+                button.classList.add('correct', 'btn-success');
+            } else if (selectedAnswers.includes(optionValue) && !currentQuestion.reponse_correcte.includes(optionValue)) {
+                button.classList.remove('btn-outline-secondary', 'btn-primary', 'correct');
+                button.classList.add('incorrect', 'btn-danger');
+            } else {
+                button.classList.remove('btn-primary', 'correct', 'incorrect');
+                button.classList.add('btn-outline-secondary');
+                if (!isCorrect && currentQuestion.reponse_correcte.includes(optionValue)) {
+                    button.classList.add('btn-success', 'correct');
+                }
+            }
+        });
+    } else if (currentQuestion.type === 'choix_unique') {
+        const correct = currentQuestion.reponse_correcte[0];
+        isCorrect = selectedAnswers[0] === correct;
+        const buttons = document.querySelectorAll('.option-button');
+        buttons.forEach(button => {
+            button.disabled = true;
+            const optionValue = button.dataset.answer;
+            if (optionValue === correct) {
+                button.classList.remove('btn-outline-secondary', 'btn-primary', 'incorrect');
+                button.classList.add('correct', 'btn-success');
+            } else if (selectedAnswers.includes(optionValue) && optionValue !== correct) {
+                button.classList.remove('btn-outline-secondary', 'btn-primary', 'correct');
+                button.classList.add('incorrect', 'btn-danger');
+            } else {
+                button.classList.remove('btn-primary', 'correct', 'incorrect');
+                button.classList.add('btn-outline-secondary');
+            }
+        });
+    } else if (currentQuestion.type === 'texte') {
+        const userAnswer = selectedAnswers[0] || '';
+        isCorrect = (userAnswer.toLowerCase() === currentQuestion.reponse_correcte.toLowerCase());
+        const inputElement = optionsContainer.querySelector('.text-input');
+        if (inputElement) {
+            inputElement.disabled = true;
+            if (isCorrect) {
+                inputElement.classList.remove('border-secondary', 'border-danger');
+                inputElement.classList.add('border-success', 'text-success');
+            } else {
+                inputElement.classList.remove('border-secondary', 'border-success');
+                inputElement.classList.add('border-danger', 'text-danger');
+                inputElement.value = `Votre réponse : ${userAnswer} | Correct : ${currentQuestion.reponse_correcte}`;
+                inputElement.style.fontSize = '0.9em';
+            }
+        }
+    }
+    if (isCorrect) {
+        score++;
+    }
+    const allOptions = optionsContainer.querySelectorAll('.option-button, .text-input');
+    allOptions.forEach(element => {
+        element.disabled = true;
+    });
+}
+
+function showResults() {
+    questionContainer.classList.add('d-none');
+    resultContainer.classList.remove('d-none');
+    scoreSpan.textContent = score;
+    totalQuestionsSpan.textContent = questions.length;
+    // Enregistrer le score en BDD via AJAX
+    fetch('save_result.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id, quizz_id, score })
+    });
+}
+
+nextButton.addEventListener('click', () => {
+    const currentQuestion = questions[currentQuestionIndex];
+    let hasResponded = false;
+    if (currentQuestion.type === 'choix_multiple' || currentQuestion.type === 'choix_unique') {
+        hasResponded = selectedAnswers.length > 0;
+    } else if (currentQuestion.type === 'texte') {
+        hasResponded = selectedAnswers.length > 0 && selectedAnswers[0] !== '';
+    }
+    if (hasResponded) {
+        checkAnswer();
+        setTimeout(() => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                displayQuestion();
+            } else {
+                showResults();
+            }
+        }, 700);
+    } else {
+        alert("Veuillez sélectionner ou saisir votre réponse avant de passer à la question suivante.");
+    }
+});
+
+submitButton.addEventListener('click', () => {
+    const currentQuestion = questions[currentQuestionIndex];
+    let hasResponded = false;
+    if (currentQuestion.type === 'choix_multiple' || currentQuestion.type === 'choix_unique') {
+        hasResponded = selectedAnswers.length > 0;
+    } else if (currentQuestion.type === 'texte') {
+        hasResponded = selectedAnswers.length > 0 && selectedAnswers[0] !== '';
+    }
+    if (hasResponded) {
+        checkAnswer();
+        setTimeout(() => {
+            showResults();
+        }, 700);
+    } else {
+        alert("Veuillez sélectionner ou saisir votre réponse avant de voir les résultats.");
+    }
+});
+
+restartButton.addEventListener('click', () => {
+    startQuiz();
+});
+
+// Lancer le quiz au chargement
+startQuiz();
+</script>
 </body>
 </html>
+<?php
+// Fichier save_result.php à créer dans code_test pour enregistrer le score en AJAX
+// Il doit vérifier l'utilisateur connecté et insérer score dans resultat_quiz
+// ...fin...
