@@ -232,8 +232,8 @@ function checkAnswer() {
     const currentQuestion = questions[currentQuestionIndex];
     let isCorrect = false;
     if (currentQuestion.type === 'choix_multiple') {
-        const correctSet = new Set(currentQuestion.reponse_correcte);
-        const selectedSet = new Set(selectedAnswers);
+        const correctSet = new Set(currentQuestion.reponse_correcte.map(String));
+        const selectedSet = new Set(selectedAnswers.map(String));
         isCorrect = (correctSet.size === selectedSet.size) && Array.from(selectedSet).every(answer => correctSet.has(answer));
         const buttons = document.querySelectorAll('.option-button');
         buttons.forEach(button => {
@@ -254,8 +254,8 @@ function checkAnswer() {
             }
         });
     } else if (currentQuestion.type === 'choix_unique') {
-        const correct = currentQuestion.reponse_correcte[0];
-        isCorrect = selectedAnswers[0] === correct;
+        const correct = String(currentQuestion.reponse_correcte[0]);
+        isCorrect = selectedAnswers.length === 1 && String(selectedAnswers[0]) === correct;
         const buttons = document.querySelectorAll('.option-button');
         buttons.forEach(button => {
             button.disabled = true;
@@ -272,8 +272,9 @@ function checkAnswer() {
             }
         });
     } else if (currentQuestion.type === 'texte') {
-        const userAnswer = selectedAnswers[0] || '';
-        isCorrect = (userAnswer.toLowerCase() === currentQuestion.reponse_correcte.toLowerCase());
+        const userAnswer = (selectedAnswers[0] || '').trim().toLowerCase();
+        const correct = (currentQuestion.reponse_correcte || '').trim().toLowerCase();
+        isCorrect = userAnswer === correct;
         const inputElement = optionsContainer.querySelector('.text-input');
         if (inputElement) {
             inputElement.disabled = true;
