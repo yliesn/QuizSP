@@ -1,12 +1,12 @@
 <?php
 // Affichage d'un quiz depuis la BDD et enregistrement du résultat
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
 require_once dirname(__DIR__, 2) . '/config/config.php';
-require_once dirname(__DIR__, 2). '/auth/auth.php';
-require_once dirname(__DIR__, 2) . '/config/database.php';
+require_once __DIR__ . '/../auth/auth.php';
+require_once ROOT_PATH . '/config/database.php';
 require_login();
 
 // Récupérer l'id du quiz à jouer
@@ -42,6 +42,40 @@ foreach ($questions as $q) {
 }
 
 $user_id = $_SESSION['user_id'];
+$user_role = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : '';
+
+// Vérifier si l'utilisateur a déjà passé ce quiz (sauf admin ou modérateur)
+if (!in_array($user_role, ['admin', 'moderateur'])) {
+    $stmt = $pdo->prepare('SELECT score, date_passage FROM resultat_quiz WHERE user_id = ? AND quizz_id = ? ORDER BY date_passage DESC LIMIT 1');
+    $stmt->execute([$user_id, $quizz_id]);
+    $result = $stmt->fetch();
+    if ($result) {
+        // Affichage du score et de la correction
+        echo '<div style="color:#34495e;text-align:center;margin-top:2em;font-size:1.3em">';
+        echo 'Vous avez déjà passé ce quiz.<br><br>';
+        echo '<span style="color:#27ae60;font-weight:bold;">Score obtenu : ' . (int)$result['score'] . ' / ' . count($questions_full) . '</span><br>';
+        echo '<span style="font-size:0.9em;color:#888;">(passé le ' . date('d/m/Y à H:i', strtotime($result['date_passage'])) . ')</span><br><br>';
+        echo '<details style="margin:1em auto;max-width:600px;text-align:left;">
+                <summary style="cursor:pointer;font-weight:bold;color:#e74c3c;">Voir la correction complète</summary>';
+        foreach ($questions_full as $q) {
+            echo '<div style="margin:1em 0;padding:1em;background:#f8f8f8;border-radius:8px;">';
+            echo '<b>Q : ' . htmlspecialchars($q['texte_question']) . '</b><br>';
+            $reponses = $q['reponses'];
+            $type = count(array_filter($reponses, fn($r) => $r['est_correcte'])) > 1 ? 'choix_multiple' : (count($reponses) > 1 ? 'choix_unique' : 'texte');
+            if ($type === 'texte') {
+                echo 'Réponse attendue : <span style="color:#2980b9">' . htmlspecialchars($reponses[0]['texte_reponse']) . '</span>';
+            } else {
+                echo 'Réponse(s) correcte(s) : ';
+                $good = array_map(fn($r) => htmlspecialchars($r['texte_reponse']), array_filter($reponses, fn($r) => $r['est_correcte']));
+                echo '<span style="color:#2980b9">' . implode(', ', $good) . '</span>';
+            }
+            echo '</div>';
+        }
+        echo '</details>';
+        echo '<a href="list.php" style="color:#e74c3c;text-decoration:underline">Retour à la liste des quiz</a></div>';
+        exit;
+    }
+}
 
 // Générer le quiz en JS (affichage dynamique)
 ?>
