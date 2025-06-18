@@ -12,3 +12,25 @@ CREATE TABLE user (
     date_derniere_connexion DATETIME DEFAULT NULL,
     date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE quizz (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titre VARCHAR(255) NOT NULL,
+    description TEXT,
+    date_creation DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE question (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    quizz_id INT NOT NULL,
+    texte_question TEXT NOT NULL,
+    FOREIGN KEY (quizz_id) REFERENCES quizz(id) ON DELETE CASCADE
+);
+
+CREATE TABLE reponse (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    question_id INT NOT NULL,
+    texte_reponse TEXT NOT NULL,
+    est_correcte BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE
+);

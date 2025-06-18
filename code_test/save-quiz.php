@@ -10,69 +10,70 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+require_once __DIR__ . '/../config/database.php';
+
 try {
     // Récupérer les données JSON envoyées
     $input = json_decode(file_get_contents('php://input'), true);
     
-    if (!$input || !isset($input['filename']) || !isset($input['content'])) {
+    if (!$input || !isset($input['content'])) {
         throw new Exception('Données manquantes');
     }
     
-    $filename = $input['filename'];
     $content = $input['content'];
-    
-    // Utiliser le dossier temporaire du système si uploads/ ne fonctionne pas
-    $uploadDir = 'uploads/quiz/';
-    
-    // Vérifier si le dossier existe et est accessible en écriture
-    if (!file_exists($uploadDir)) {
-        if (!mkdir($uploadDir, 0777, true)) {
-            // Si impossible de créer uploads/, utiliser le dossier courant
-            $uploadDir = './';
-        }
+
+    // Décoder le contenu JSON pour l'insertion en BDD
+    $quizData = json_decode($content, true);
+    if (!$quizData || !isset($quizData['title']) || !isset($quizData['questions'])) {
+        throw new Exception('Format de quiz invalide');
     }
-    
-    // Vérifier les permissions d'écriture
-    if (!is_writable($uploadDir)) {
-        // Tenter de changer les permissions
-        chmod($uploadDir, 0777);
-        
-        // Si toujours pas accessible, utiliser le dossier courant
-        if (!is_writable($uploadDir)) {
-            $uploadDir = './';
-        }
+
+    $pdo = getDbConnection();
+    if (!$pdo) {
+        throw new Exception('Connexion à la base de données impossible');
     }
-    
-    // Sécuriser le nom de fichier
-    $filename = basename($filename);
-    $filepath = $uploadDir . $filename;
-    
-    // Sauvegarder le fichier
-    $bytesWritten = file_put_contents($filepath, $content);
-    
-    if ($bytesWritten !== false) {
+    $pdo->beginTransaction();
+    try {
+        // Insertion du quiz
+        $stmt = $pdo->prepare('INSERT INTO quizz (titre, description) VALUES (?, ?)');
+        $stmt->execute([
+            $quizData['title'],
+            isset($quizData['description']) ? $quizData['description'] : null
+        ]);
+        $quizz_id = $pdo->lastInsertId();
+
+        // Insertion des questions et réponses
+        foreach ($quizData['questions'] as $question) {
+            $stmtQ = $pdo->prepare('INSERT INTO question (quizz_id, texte_question) VALUES (?, ?)');
+            $stmtQ->execute([$quizz_id, $question['question']]);
+            $question_id = $pdo->lastInsertId();
+
+            if ($question['type'] === 'choix_multiple') {
+                foreach ($question['options'] as $option) {
+                    $is_correct = in_array($option, $question['reponse_correcte']) ? 1 : 0;
+                    $stmtR = $pdo->prepare('INSERT INTO reponse (question_id, texte_reponse, est_correcte) VALUES (?, ?, ?)');
+                    $stmtR->execute([$question_id, $option, $is_correct]);
+                }
+            } elseif ($question['type'] === 'texte') {
+                $stmtR = $pdo->prepare('INSERT INTO reponse (question_id, texte_reponse, est_correcte) VALUES (?, ?, 1)');
+                $stmtR->execute([$question_id, $question['reponse_correcte']]);
+            }
+        }
+        $pdo->commit();
         echo json_encode([
             'success' => true,
-            'message' => 'Quiz sauvegardé avec succès',
-            'filename' => $filename,
-            'path' => $filepath,
-            'size' => $bytesWritten . ' bytes'
+            'message' => 'Quiz enregistré en base de données avec succès',
+            'quizz_id' => $quizz_id
         ]);
-    } else {
-        throw new Exception('Impossible d\'écrire dans le fichier. Vérifiez les permissions du dossier.');
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        throw $e;
     }
-    
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error' => $e->getMessage(),
-        'debug_info' => [
-            'current_dir' => getcwd(),
-            'upload_dir_exists' => file_exists('uploads/quiz/'),
-            'upload_dir_writable' => is_writable('uploads/quiz/'),
-            'current_dir_writable' => is_writable('./')
-        ]
+        'error' => $e->getMessage()
     ]);
 }
 ?>
