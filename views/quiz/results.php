@@ -56,11 +56,18 @@ foreach ($results as $row) {
     $quizzes[$row['titre']][] = $row;
 }
 
-$page_title = 'Résultats des quiz par personne';
+// Récupérer le nombre de questions pour chaque quiz
+$nb_questions_by_quiz = [];
+$stmt = $pdo->query('SELECT quizz.id, COUNT(question.id) as nb_questions FROM quizz LEFT JOIN question ON question.quizz_id = quizz.id GROUP BY quizz.id');
+foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+    $nb_questions_by_quiz[$row['id']] = $row['nb_questions'];
+}
+
+$page_title = 'Résultats des quiz';
 include __DIR__ . '/../../includes/header.php';
 ?>
 <div class="container mx-auto max-w-4xl mt-10 p-8 bg-white rounded-lg shadow-lg">
-    <h1 class="text-2xl font-bold mb-6 text-primary flex items-center gap-2"><i class="fas fa-poll"></i> Résultats des quiz par personne</h1>
+    <h1 class="text-2xl font-bold mb-6 text-primary flex items-center gap-2"><i class="fas fa-poll"></i> Résultats des quizz</h1>
     <div class="mb-6">
         <form method="get" class="flex flex-wrap gap-4 items-end">
             <div>
@@ -86,8 +93,13 @@ include __DIR__ . '/../../includes/header.php';
     <?php else: ?>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <?php foreach ($quizzes as $quiz_title => $quiz_results): ?>
+                <?php 
+                    // Récupérer l'ID du quiz pour cette card
+                    $quiz_id = $quiz_results[0]['quizz_id'];
+                    $total_questions = isset($nb_questions_by_quiz[$quiz_id]) ? $nb_questions_by_quiz[$quiz_id] : '?';
+                ?>
                 <div class="bg-gray-50 rounded-lg shadow p-4">
-                    <h2 class="text-lg font-semibold mb-3 text-primary flex items-center gap-2"><i class="fas fa-clipboard-list"></i> <?php echo htmlspecialchars($quiz_title); ?></h2>
+                    <h2 class="text-lg font-semibold mb-3 text-primary flex items-center gap-2"><i class="fas fa-clipboard-list"></i> <?php echo htmlspecialchars($quiz_title); ?> <span class="ml-2 text-xs text-gray-500">(<?php echo $total_questions; ?> question<?php echo ($total_questions > 1 ? 's' : ''); ?>)</span></h2>
                     <table class="min-w-full border text-xs mb-2">
                         <thead class="bg-gray-100">
                             <tr>
@@ -102,7 +114,9 @@ include __DIR__ . '/../../includes/header.php';
                                 <tr>
                                     <td class="border px-2 py-1"><?php echo htmlspecialchars($row['nom']); ?></td>
                                     <td class="border px-2 py-1"><?php echo htmlspecialchars($row['prenom']); ?></td>
-                                    <td class="border px-2 py-1"><?php echo htmlspecialchars($row['score']); ?></td>
+                                    <td class="border px-2 py-1 font-bold text-center">
+                                        <?php echo htmlspecialchars($row['score']) . ' / ' . $total_questions; ?>
+                                    </td>
                                     <td class="border px-2 py-1"><?php echo htmlspecialchars($row['date_passage']); ?></td>
                                 </tr>
                             <?php endforeach; ?>
