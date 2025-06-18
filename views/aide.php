@@ -1,3 +1,5 @@
+<?php require_once __DIR__ . '/../config/config.php'; ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -65,7 +67,7 @@
         <li>Pour toute suggestion ou question, utilisez le formulaire de contact disponible sur le tableau de bord.</li>
     </ul>
 
-    <a href=" <?php echo BASE_URL; ?>/dashboard.php" class="btn-dashboard">← Retour au tableau de bord</a>
+    <a href="<?php echo BASE_URL; ?>/dashboard.php" class="btn-dashboard">← Retour au tableau de bord</a>
 </div>
 </body>
 </html>
