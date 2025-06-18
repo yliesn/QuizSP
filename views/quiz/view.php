@@ -387,8 +387,6 @@ function showResults() {
                 debugMsg = '\n--- DEBUG ---\n' + JSON.stringify(data.debug, null, 2);
             }
             alert('Erreur lors de l\'enregistrement du score : ' + (data.message || '') + debugMsg);
-        } else {
-            alert('Score enregistré avec succès !');
         }
     });
 }
