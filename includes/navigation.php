@@ -20,7 +20,7 @@
         </ul>
       </li>
       <li>
-          <a class="px-4 py-2 rounded hover:bg-secondary transition flex items-center gap-2" href="/views/quiz/create.php">
+          <a class="px-4 py-2 rounded hover:bg-secondary transition flex items-center gap-2" href="<?php echo BASE_URL; ?>/views/quiz/create.php">
               <i class="fas fa-fire mr-1"></i> Générer un quiz
           </a>
       </li>
