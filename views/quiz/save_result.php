@@ -1,9 +1,9 @@
 <?php
 // code_test/save_result.php
 // Enregistre le score d'un utilisateur pour un quiz (appel AJAX)
-require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/../auth/auth.php';
-require_once __DIR__ . '/../config/database.php';
+require_once dirname(__DIR__, 2) . '/config/config.php';
+require_once dirname(__DIR__, 2) . '/auth/auth.php';
+require_once dirname(__DIR__, 2) . '/config/database.php';
 header('Content-Type: application/json');
 
 // Vérifier que l'utilisateur est connecté
