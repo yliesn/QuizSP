@@ -25,6 +25,11 @@
           </a>
       </li>
     <?php endif; ?>
+    <li>
+        <a class="px-4 py-2 rounded hover:bg-secondary transition flex items-center gap-2" href="<?php echo BASE_URL; ?>/views/quiz/list.php">
+            <i class="fas fa-list mr-1"></i> Liste des quiz
+        </a>
+    </li>
 </ul>
 <ul class="flex flex-col lg:flex-row gap-2 ml-auto">
     <li class="relative dropdown-parent" id="user-menu-parent">
