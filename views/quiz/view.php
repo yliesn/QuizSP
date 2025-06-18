@@ -355,20 +355,40 @@ function showResults() {
     scoreSpan.textContent = score;
     totalQuestionsSpan.textContent = questions.length;
     // Message et icône
-    const msg = document.getElementById('result-message');
-    const icon = document.getElementById('result-icon');
+    let msg = document.getElementById('result-message');
+    if (!msg) {
+        msg = document.createElement('div');
+        msg.id = 'result-message';
+        msg.style.fontSize = '1.1em';
+        msg.style.marginBottom = '1.5em';
+        msg.style.color = '#fff';
+        resultContainer.insertBefore(msg, resultContainer.querySelector('a, .result-link'));
+    }
+    let icon = document.getElementById('result-icon');
+    if (!icon) {
+        icon = document.createElement('div');
+        icon.id = 'result-icon';
+        resultContainer.insertBefore(icon, msg);
+    }
     msg.textContent = `Votre score : ${score} / ${questions.length}`;
     icon.innerHTML = '';
     // Enregistrer le score en BDD via AJAX
-    fetch('save_result.php', {
+    fetch('./save_result.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id, quizz_id, score })
     })
     .then(response => response.json())
     .then(data => {
+        console.log('Réponse AJAX save_result.php:', data);
         if (!data.success) {
-            alert('Erreur lors de l\'enregistrement du score : ' + (data.message || ''));
+            let debugMsg = '';
+            if (data.debug) {
+                debugMsg = '\n--- DEBUG ---\n' + JSON.stringify(data.debug, null, 2);
+            }
+            alert('Erreur lors de l\'enregistrement du score : ' + (data.message || '') + debugMsg);
+        } else {
+            alert('Score enregistré avec succès !');
         }
     });
 }

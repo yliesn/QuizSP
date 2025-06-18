@@ -12,7 +12,16 @@ header('Content-Type: application/json');
 // Vérifier que l'utilisateur est connecté
 if (!is_logged_in()) {
     http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Non autorisé']);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Non autorisé',
+        'debug' => [
+            'session' => $_SESSION,
+            'cookies' => $_COOKIE,
+            'logged_in' => isset($_SESSION['logged_in']) ? $_SESSION['logged_in'] : null,
+            'user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null
+        ]
+    ]);
     exit;
 }
 
@@ -31,7 +40,14 @@ $score = intval($input['score']);
 // Vérification de cohérence (l'utilisateur connecté doit correspondre à user_id)
 if ($_SESSION['user_id'] !== $user_id) {
     http_response_code(403);
-    echo json_encode(['success' => false, 'message' => 'Utilisateur non autorisé']);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Utilisateur non autorisé',
+        'debug' => [
+            'session_user_id' => $_SESSION['user_id'],
+            'post_user_id' => $user_id
+        ]
+    ]);
     exit;
 }
 
