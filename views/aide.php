@@ -59,12 +59,12 @@
     <ul>
         <li>Vérifiez votre connexion internet.</li>
         <li>Essayez de recharger la page.</li>
-        <li>Si le problème persiste, contactez un administrateur ou envoyez un mail à l'équipe support.</li>
+        <li>Si le problème persiste, contactez un animateur JSP.</li>
     </ul>
 
     <h2>Autres questions</h2>
     <ul>
-        <li>Pour toute suggestion ou question, utilisez le formulaire de contact disponible sur le tableau de bord.</li>
+        <li>Pour toute suggestion ou question, demande au animateur JSP.</li>
     </ul>
 
     <a href="<?php echo BASE_URL; ?>/dashboard.php" class="btn-dashboard">← Retour au tableau de bord</a>
