@@ -11,7 +11,7 @@ if (!defined('ROOT_PATH')) {
 ?>
 <footer class="bg-custom py-6 mt-10">
     <div class="container mx-auto text-center text-custom">
-        <p class="mb-0">&copy; <?php echo date('Y'); ?> JSP</p>
+        <p class="mb-0">&copy; <?php echo date('Y'); ?> QuizSP</p>
         <p class="text-xs mt-2">Designé & développé par Ylies Nejara</p>
     </div>
 </footer>

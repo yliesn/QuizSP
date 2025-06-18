@@ -10,7 +10,7 @@ include __DIR__ . '/includes/header.php';
 ?>
 <div class="min-h-screen bg-gradient-to-br from-primary to-secondary flex flex-col items-center justify-start py-10">
     <div class="w-full max-w-5xl bg-white/90 rounded-xl shadow-2xl p-10">
-        <h1 class="text-3xl font-bold text-primary mb-8 flex items-center gap-2"><i class="fas fa-fire"></i> Tableau de bord</h1>
+        <h1 class="text-3xl font-bold text-primary mb-8 flex items-center gap-2"><i class="fas fa-home"></i> Tableau de bord</h1>
         <?php if (in_array($user_role, ['ADMIN', 'MODERATEUR'])): ?>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
             <a href="<?php echo BASE_URL; ?>/views/quiz/list.php" class="dashboard-card">
@@ -51,7 +51,7 @@ include __DIR__ . '/includes/header.php';
                 <div class="font-bold text-lg">Mes quiz</div>
                 <div class="text-gray-600 text-sm">Accéder aux quiz disponibles</div>
             </a>
-            <a href="<?php echo BASE_URL; ?>/views/quiz/results.php" class="dashboard-card">
+            <a href="<?php echo BASE_URL; ?>/views/quiz/mes_results.php" class="dashboard-card">
                 <div class="icon-circle bg-secondary"><i class="fas fa-poll"></i></div>
                 <div class="font-bold text-lg">Mes résultats</div>
                 <div class="text-gray-600 text-sm">Voir mes scores et mon historique</div>

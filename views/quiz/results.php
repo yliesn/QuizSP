@@ -66,9 +66,11 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
 $page_title = 'Résultats des quiz';
 include __DIR__ . '/../../includes/header.php';
 ?>
+<!-- Ajout Chart.js depuis CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <div class="container mx-auto max-w-4xl mt-10 p-8 bg-white rounded-lg shadow-lg">
     <h1 class="text-2xl font-bold mb-6 text-primary flex items-center gap-2"><i class="fas fa-poll"></i> Résultats des quizz</h1>
-    <div class="mb-6">
+    <div class="mb-6 flex items-center gap-4">
         <form method="get" class="flex flex-wrap gap-4 items-end">
             <div>
                 <label for="user" class="block text-custom">Nom ou prénom</label>
@@ -87,19 +89,80 @@ include __DIR__ . '/../../includes/header.php';
                 <a href="results.php" class="ml-2 px-4 py-2 rounded bg-gray-300 text-gray-700 hover:bg-gray-400 transition">Réinitialiser</a>
             </div>
         </form>
+        <div class="flex items-center ml-auto">
+            <input type="checkbox" id="toggle-graphs" checked style="width:1.2em;height:1.2em;">
+            <label for="toggle-graphs" class="ml-2 text-custom font-semibold cursor-pointer">Afficher les graphiques</label>
+        </div>
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggle = document.getElementById('toggle-graphs');
+        function updateGraphsDisplay() {
+            document.querySelectorAll('canvas[id^="chart-quiz-"]').forEach(c => {
+                c.style.display = toggle.checked ? '' : 'none';
+            });
+        }
+        toggle.addEventListener('change', updateGraphsDisplay);
+        updateGraphsDisplay();
+    });
+    </script>
     <?php if (empty($quizzes)): ?>
         <div class="text-center py-4">Aucun résultat trouvé.</div>
     <?php else: ?>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <?php foreach ($quizzes as $quiz_title => $quiz_results): ?>
                 <?php 
-                    // Récupérer l'ID du quiz pour cette card
                     $quiz_id = $quiz_results[0]['quizz_id'];
                     $total_questions = isset($nb_questions_by_quiz[$quiz_id]) ? $nb_questions_by_quiz[$quiz_id] : '?';
+                    // Préparer les scores pour le graphique
+                    $scores = array_map(function($row) { return (int)$row['score']; }, $quiz_results);
+                    $labels = array_map(function($row) { return $row['prenom'] . ' ' . $row['nom']; }, $quiz_results);
+
+                    // Regrouper les scores pour le camembert : nombre d'utilisateurs par score
+                    $score_counts = array_count_values($scores);
+                    $pie_labels = array_map(function($score) use ($total_questions) {
+                        return $score . ' / ' . $total_questions;
+                    }, array_keys($score_counts));
+                    $pie_data = array_values($score_counts);
+                    $pie_colors = [];
+                    $nb_colors = max(1, count($pie_labels));
+                    foreach ($pie_labels as $i => $lbl) {
+                        // Palette dynamique sur tout le cercle chromatique
+                        $hue = round(360 * $i / $nb_colors);
+                        $pie_colors[] = "hsl($hue, 70%, 60%)";
+                    }
                 ?>
                 <div class="bg-gray-50 rounded-lg shadow p-4">
                     <h2 class="text-lg font-semibold mb-3 text-primary flex items-center gap-2"><i class="fas fa-clipboard-list"></i> <?php echo htmlspecialchars($quiz_title); ?> <span class="ml-2 text-xs text-gray-500">(<?php echo $total_questions; ?> question<?php echo ($total_questions > 1 ? 's' : ''); ?>)</span></h2>
+                    <!-- Graphe des scores -->
+                    <canvas id="chart-quiz-<?php echo $quiz_id; ?>" height="180"></canvas>
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        if (window.Chart) {
+                            const ctx = document.getElementById('chart-quiz-<?php echo $quiz_id; ?>').getContext('2d');
+                            new Chart(ctx, {
+                                type: 'pie',
+                                data: {
+                                    labels: <?php echo json_encode($pie_labels); ?>,
+                                    datasets: [{
+                                        label: 'Répartition des scores',
+                                        data: <?php echo json_encode($pie_data); ?>,
+                                        backgroundColor: <?php echo json_encode($pie_colors); ?>,
+                                        borderColor: '#fff',
+                                        borderWidth: 2
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    plugins: {
+                                        legend: { display: true, position: 'bottom' },
+                                        title: { display: false }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    </script>
                     <table class="min-w-full border text-xs mb-2">
                         <thead class="bg-gray-100">
                             <tr>

@@ -2,42 +2,6 @@
 // Menu de navigation principal, à inclure dans le header ou les pages
 // Affiche les liens selon le rôle de l'usager
 ?>
-<ul class="flex flex-row gap-2">
-    <li>
-        <a class="px-4 py-2 rounded hover:bg-secondary transition flex items-center gap-2" href="<?php echo BASE_URL; ?>/dashboard.php">
-            <i class="fas fa-tachometer-alt mr-1"></i> Tableau de bord
-        </a>
-    </li>
-    <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'ADMIN'): ?>
-    <li class="relative dropdown-parent">
-        <button class="px-4 py-2 rounded hover:bg-secondary transition flex items-center gap-2 dropdown-toggle" type="button">
-            <i class="fas fa-cog mr-1"></i> Administration
-            <span class="fas fa-chevron-down"></span>
-        </button>
-        <ul class="absolute left-0 mt-2 w-48 bg-white text-gray-800 rounded shadow-lg hidden z-50 dropdown-menu">
-            <li><a class="block px-4 py-2 hover:bg-gray-100" href="<?php echo BASE_URL; ?>/views/users/list.php">Utilisateurs</a></li>
-            <li><a class="block px-4 py-2 hover:bg-gray-100" href="<?php echo BASE_URL; ?>/views/users/create.php">Créer un utilisateur</a></li>
-        </ul>
-      </li>
-      <li>
-          <a class="px-4 py-2 rounded hover:bg-secondary transition flex items-center gap-2" href="<?php echo BASE_URL; ?>/views/quiz/create.php">
-              <i class="fas fa-fire mr-1"></i> Générer un quiz
-          </a>
-      </li>
-    <?php endif; ?>
-    <li>
-        <a class="px-4 py-2 rounded hover:bg-secondary transition flex items-center gap-2" href="<?php echo BASE_URL; ?>/views/quiz/list.php">
-            <i class="fas fa-list mr-1"></i> Liste des quiz
-        </a>
-    </li>
-    <?php if (isset($_SESSION['user_role']) && in_array($_SESSION['user_role'], ['ADMIN', 'MODERATEUR'])): ?>
-    <li>
-        <a class="px-4 py-2 rounded hover:bg-secondary transition flex items-center gap-2" href="<?php echo BASE_URL; ?>/views/quiz/results.php">
-            <i class="fas fa-poll mr-1"></i> Résultats quiz
-        </a>
-    </li>
-    <?php endif; ?>
-</ul>
 <ul class="flex flex-col lg:flex-row gap-2 ml-auto">
     <li class="relative dropdown-parent" id="user-menu-parent">
         <button id="user-menu-btn" class="flex items-center gap-2 px-4 py-2 rounded hover:bg-secondary transition cursor-pointer w-full text-left dropdown-toggle">

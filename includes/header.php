@@ -28,14 +28,14 @@ $role = isset($_SESSION['user_role']) ? htmlspecialchars($_SESSION['user_role'])
     <!-- Correction du chemin du CSS personnalisé en relatif pour éviter le mixed content -->
     <link href="/SaaS_pompier/assets/css/custom.css" rel="stylesheet">
     <script src="<?php echo BASE_URL; ?>/assets/js/notifications.js"></script>
-    <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' - ' : ''; ?>JSP</title>
+    <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' - ' : ''; ?>QuizSP</title>
 </head>
 <body>
     <nav class="bg-primary text-white px-4 py-2">
         <div class="container mx-auto flex items-center">
             <a class="flex items-center gap-2 font-bold text-xl mr-4" href="<?php echo BASE_URL; ?>/dashboard.php">
-                <i class="fas fa-pills"></i>
-                JSP
+                <i class="fas fa-fire"></i>
+                QuizSP
             </a>
             <?php include __DIR__ . '/navigation.php'; ?>
         </div>
