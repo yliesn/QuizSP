@@ -50,29 +50,37 @@ if (!in_array($user_role, ['admin', 'moderateur'])) {
     $stmt->execute([$user_id, $quizz_id]);
     $result = $stmt->fetch();
     if ($result) {
-        // Affichage du score et de la correction
-        echo '<div style="color:#34495e;text-align:center;margin-top:2em;font-size:1.3em">';
-        echo 'Vous avez déjà passé ce quiz.<br><br>';
-        echo '<span style="color:#27ae60;font-weight:bold;">Score obtenu : ' . (int)$result['score'] . ' / ' . count($questions_full) . '</span><br>';
-        echo '<span style="font-size:0.9em;color:#888;">(passé le ' . date('d/m/Y à H:i', strtotime($result['date_passage'])) . ')</span><br><br>';
-        echo '<details style="margin:1em auto;max-width:600px;text-align:left;">
-                <summary style="cursor:pointer;font-weight:bold;color:#e74c3c;">Voir la correction complète</summary>';
-        foreach ($questions_full as $q) {
-            echo '<div style="margin:1em 0;padding:1em;background:#f8f8f8;border-radius:8px;">';
-            echo '<b>Q : ' . htmlspecialchars($q['texte_question']) . '</b><br>';
+        // Affichage stylé du score et de la correction
+        echo '<div style="display:flex;justify-content:center;align-items:center;min-height:100vh;background:#f4f6fb;">';
+        echo '<div style="background:#fff;max-width:600px;width:100%;margin:2em auto;padding:2.5em 2em 2em 2em;border-radius:1.2em;box-shadow:0 8px 32px rgba(44,62,80,0.13);text-align:center;">';
+        echo '<div style="font-size:1.2em;color:#34495e;margin-bottom:1.2em;font-weight:500;">Vous avez déjà passé ce quiz</div>';
+        echo '<div style="margin-bottom:1.5em;">';
+        echo '<span style="display:inline-block;background:#27ae60;color:#fff;font-weight:bold;font-size:1.5em;padding:0.4em 1.2em;border-radius:2em;box-shadow:0 2px 8px rgba(39,174,96,0.08);">Score : ' . (int)$result['score'] . ' / ' . count($questions_full) . '</span>';
+        echo '</div>';
+        echo '<div style="font-size:0.98em;color:#888;margin-bottom:2em;">Passé le ' . date('d/m/Y à H:i', strtotime($result['date_passage'])) . '</div>';
+        echo '<details style="margin:1.5em auto 0;max-width:520px;text-align:left;">';
+        echo '<summary style="cursor:pointer;font-weight:bold;color:#e74c3c;font-size:1.1em;">Voir la correction complète</summary>';
+        echo '<div style="margin-top:1.2em;">';
+        foreach ($questions_full as $i => $q) {
+            echo '<div style="margin-bottom:1.2em;padding:1.1em 1em 1em 1em;background:#f8fafd;border-radius:0.9em;border:1.5px solid #e1e7ef;box-shadow:0 1px 4px rgba(44,62,80,0.04);">';
+            echo '<div style="font-weight:600;color:#2d3e50;margin-bottom:0.5em;"><span style="color:#e67e22;font-size:1.1em;vertical-align:middle;">&#128204;</span> Q' . ($i+1) . ' : ' . htmlspecialchars($q['texte_question']) . '</div>';
             $reponses = $q['reponses'];
             $type = count(array_filter($reponses, fn($r) => $r['est_correcte'])) > 1 ? 'choix_multiple' : (count($reponses) > 1 ? 'choix_unique' : 'texte');
             if ($type === 'texte') {
-                echo 'Réponse attendue : <span style="color:#2980b9">' . htmlspecialchars($reponses[0]['texte_reponse']) . '</span>';
+                echo '<div style="margin-left:1.2em;">Réponse attendue : <span style="color:#2980b9;font-weight:500;">' . htmlspecialchars($reponses[0]['texte_reponse']) . '</span></div>';
             } else {
-                echo 'Réponse(s) correcte(s) : ';
-                $good = array_map(fn($r) => htmlspecialchars($r['texte_reponse']), array_filter($reponses, fn($r) => $r['est_correcte']));
-                echo '<span style="color:#2980b9">' . implode(', ', $good) . '</span>';
+                echo '<div style="margin-left:1.2em;">Réponse(s) correcte(s) : ';
+                $good = array_map(fn($r) => '<span style="color:#2980b9;font-weight:500;">' . htmlspecialchars($r['texte_reponse']) . '</span>', array_filter($reponses, fn($r) => $r['est_correcte']));
+                echo implode(', ', $good);
+                echo '</div>';
             }
             echo '</div>';
         }
+        echo '</div>';
         echo '</details>';
-        echo '<a href="list.php" style="color:#e74c3c;text-decoration:underline">Retour à la liste des quiz</a></div>';
+        echo '<a href="list.php" style="display:inline-block;margin-top:2.5em;padding:0.7em 2.2em;background:#e74c3c;color:#fff;font-weight:600;border-radius:2em;text-decoration:none;box-shadow:0 2px 8px rgba(231,76,60,0.08);transition:background 0.2s;">Retour à la liste des quiz</a>';
+        echo '</div>';
+        echo '</div>';
         exit;
     }
 }
@@ -149,11 +157,15 @@ if (!in_array($user_role, ['admin', 'moderateur'])) {
         <button id="next-button" class="btn-lg btn-primary">Suivant</button>
         <button id="submit-button" class="btn-lg btn-success d-none">Voir les résultats</button>
     </div>
-    <div id="result-container" class="result-container p-6 rounded-lg shadow text-center mt-8 d-none">
-        <h2 class="font-oswald text-2xl mb-4">Résultat du Quiz</h2>
-        <p>Score : <span id="score"></span> / <span id="total-questions"></span></p>
-        <!-- <button id="restart-button" class="btn-lg btn-outline-secondary mt-4">Recommencer</button> -->
-        <a href="list.php" class="inline-block mt-6 px-6 py-2 bg-primary text-white rounded hover:bg-secondary transition">Retour à la liste des quiz</a>
+    <div id="result-container" class="result-container p-6 rounded-lg shadow text-center mt-8 d-none" style="max-width:420px;margin:2.5em auto 0 auto;background:linear-gradient(135deg,#f8fafc 60%,#e3f6fd 100%);box-shadow:0 8px 32px rgba(44,62,80,0.13);border-radius:1.2em;border:1.5px solid #b2d6e6;">
+        <div id="result-icon"></div>
+        <h2 class="font-oswald text-2xl mb-4" style="color:#1a6fa3;letter-spacing:1px;">Résultat du Quiz</h2>
+        <div style="margin-bottom:1.5em;">
+            <span id="score-badge" style="display:inline-block;padding:0.7em 1.5em;font-size:1.5em;font-weight:bold;border-radius:2em;background:#eafaf1;color:#1abc9c;box-shadow:0 2px 8px #b2d6e6;vertical-align:middle;"></span>
+            <span style="font-size:1.1em;color:#888;margin-left:0.7em;">/ <span id="total-questions"></span></span>
+        </div>
+        <div id="result-message" style="font-size:1.1em;margin-bottom:1.5em;color:#34495e;"></div>
+        <a href="list.php" class="inline-block mt-6 px-6 py-2" style="background:#e74c3c;color:#fff;border-radius:2em;font-weight:bold;text-decoration:none;box-shadow:0 2px 8px #f5b7b1;transition:background 0.2s;">← Retour à la liste des quiz</a>
     </div>
 </div>
 <script>
@@ -342,6 +354,32 @@ function showResults() {
     resultContainer.classList.remove('d-none');
     scoreSpan.textContent = score;
     totalQuestionsSpan.textContent = questions.length;
+    // Badge score stylé
+    const badge = document.getElementById('score-badge');
+    badge.textContent = score;
+    if (score === questions.length) {
+        badge.style.background = '#eafaf1';
+        badge.style.color = '#1abc9c';
+    } else if (score >= Math.ceil(questions.length * 0.7)) {
+        badge.style.background = '#fffbe6';
+        badge.style.color = '#f39c12';
+    } else {
+        badge.style.background = '#fdeaea';
+        badge.style.color = '#e74c3c';
+    }
+    // Message et icône
+    const msg = document.getElementById('result-message');
+    const icon = document.getElementById('result-icon');
+    if (score === questions.length) {
+        msg.textContent = 'Bravo ! Score parfait !';
+        icon.innerHTML = '<svg width="48" height="48" fill="none" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#eafaf1" stroke="#1abc9c" stroke-width="3"/><path d="M15 25l6 6 12-14" stroke="#1abc9c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    } else if (score >= Math.ceil(questions.length * 0.7)) {
+        msg.textContent = 'Bien joué ! Vous avez un bon score.';
+        icon.innerHTML = '<svg width="48" height="48" fill="none" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#fffbe6" stroke="#f39c12" stroke-width="3"/><path d="M15 25l6 6 12-14" stroke="#f39c12" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    } else {
+        msg.textContent = 'Vous pouvez faire mieux, réessayez !';
+        icon.innerHTML = '<svg width="48" height="48" fill="none" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#fdeaea" stroke="#e74c3c" stroke-width="3"/><path d="M17 31l14-14M31 31L17 17" stroke="#e74c3c" stroke-width="3" stroke-linecap="round"/></svg>';
+    }
     // Enregistrer le score en BDD via AJAX
     fetch('save_result.php', {
         method: 'POST',
