@@ -1,0 +1,222 @@
+/* Couleurs inspirées des pompiers : bleu foncé, rouge vif, gris métallisé */
+:root {
+    --bs-dark-blue: #2c3e50; /* Bleu marine, couleur d'uniforme */
+    --bs-firefighter-red: #e74c3c; /* Rouge vif, couleur d'urgence/camion */
+    --bs-light-gray: #ecf0f1; /* Gris clair, fond pour les cartes */
+    --bs-text-dark: #34495e; /* Gris-bleu foncé pour le texte principal */
+    --bs-text-muted: #7f8c8d; /* Gris moyen pour le texte secondaire */
+    --bs-primary-blue: #3498db; /* Bleu standard pour les actions */
+    --bs-success-green: #2ecc71; /* Vert pour le succès */
+    --bs-danger-red: #c0392b; /* Rouge plus profond pour l'erreur */
+    --bs-border-red: #c0392b; /* Bordure rouge pour le conteneur principal */
+
+    --bs-option-hover-bg: #dde1e2; /* Gris clair au survol des options */
+    --bs-option-selected-bg: #2980b9; /* Bleu foncé pour option sélectionnée */
+    --bs-option-correct-bg: #27ae60; /* Vert pour bonne réponse */
+    --bs-option-incorrect-bg: #e74c3c; /* Rouge vif pour mauvaise réponse */
+}
+
+/* Polices Google Fonts */
+.font-roboto {
+    font-family: 'Roboto', sans-serif;
+}
+
+.font-oswald {
+    font-family: 'Oswald', sans-serif; /* Pour les titres, plus robuste */
+}
+
+/* Styles généraux du corps */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bs-dark-blue);
+    background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="50" x2="100" y2="50" stroke="%2334495e" stroke-width="1" opacity="0.1"/><line x1="50" y1="0" x2="50" y2="100" stroke="%2334495e" stroke-width="1" opacity="0.1"/></svg>'); /* Motif discret */
+    background-size: 50px 50px;
+}
+
+h1 {
+    color: var(--bs-firefighter-red) !important;
+    font-size: 2.8em;
+    text-transform: uppercase; /* Donne un aspect plus officiel */
+    letter-spacing: 1.5px;
+}
+
+h2 {
+    color: var(--bs-firefighter-red) !important;
+    font-size: 2.2em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Conteneur principal du quiz */
+.quiz-container {
+    max-width: 850px; /* Plus large pour plus d'espace */
+    border-radius: 0.75rem;
+    border: 5px solid var(--bs-firefighter-red) !important; /* Bordure rouge emblématique */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Ombre plus prononcée */
+}
+
+/* Conteneur de la question */
+.question-container {
+    min-height: 140px;
+    background-color: var(--bs-light-gray) !important;
+    border: 1px solid #bdc3c7; /* Bordure subtile */
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05); /* Ombre intérieure douce */
+}
+
+#question-text {
+    font-size: 1.6em; /* Plus facile à lire */
+    color: var(--bs-text-dark) !important;
+    font-weight: 500; /* Légèrement plus gras */
+}
+
+/* Boutons d'options */
+.option-button {
+    background-color: #fff;
+    border: 1px solid #bdc3c7;
+    border-radius: 0.5rem;
+    padding: 0.9rem 1.2rem;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--bs-text-dark);
+    font-weight: normal;
+    text-align: left;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Petite ombre pour les options */
+}
+
+.option-button:hover {
+    background-color: var(--bs-option-hover-bg);
+    border-color: var(--bs-primary-blue);
+    transform: translateY(-2px); /* Très léger soulèvement */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.option-button.selected {
+    background-color: var(--bs-primary-blue);
+    border-color: var(--bs-primary-blue);
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); /* Ombre lumineuse bleue */
+}
+
+.option-button.correct {
+    background-color: var(--bs-success-green);
+    border-color: var(--bs-success-green);
+    color: #ffffff;
+}
+
+.option-button.incorrect {
+    background-color: var(--bs-danger-red);
+    border-color: var(--bs-danger-red);
+    color: #ffffff;
+}
+
+/* Champ de texte pour les réponses */
+.text-input {
+    background-color: #fff;
+    border: 1px solid #bdc3c7;
+    color: var(--bs-text-dark);
+    padding: 0.8rem;
+    font-size: 1.1em;
+    text-align: left;
+    border-radius: 0.35rem;
+    outline: none;
+    box-sizing: border-box;
+    width: 100%;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.text-input:focus {
+    border-color: var(--bs-primary-blue);
+    box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+}
+
+/* Boutons d'action (Suivant, Voir résultats, Recommencer) */
+.btn-lg {
+    padding: 0.9rem 2rem;
+    font-size: 1.3em; /* Un peu plus grands */
+    border-radius: 0.35rem;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.btn-lg:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+    background-color: var(--bs-primary-blue);
+    border-color: var(--bs-primary-blue);
+}
+
+.btn-primary:hover {
+    background-color: #217dbb;
+    border-color: #217dbb;
+}
+
+.btn-success {
+    background-color: var(--bs-success-green);
+    border-color: var(--bs-success-green);
+}
+
+.btn-success:hover {
+    background-color: #23a060;
+    border-color: #23a060;
+}
+
+.btn-outline-secondary {
+    color: var(--bs-text-muted);
+    border-color: var(--bs-text-muted);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--bs-text-muted);
+    color: #fff;
+}
+
+/* Résultats */
+.result-container {
+    background-color: var(--bs-light-gray) !important;
+    border: 1px solid #bdc3c7;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.result-container p {
+    font-size: 1.6em;
+    color: var(--bs-text-dark);
+}
+
+#score, #total-questions {
+    font-size: 2em !important;
+    color: var(--bs-primary-blue) !important;
+}
+
+/* Utilities (animations) */
+.d-none {
+    display: none !important;
+}
+
+/* Animation de la question (plus subtile) */
+.question-container.animate {
+    animation: fadeInScale 0.5s ease-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Pas de confettis */
+.confetti {
+    display: none;
+}
