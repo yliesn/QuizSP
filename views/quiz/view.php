@@ -1,5 +1,9 @@
 <?php
 // Affichage d'un quiz depuis la BDD et enregistrement du résultat
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../auth/auth.php';
 require_once ROOT_PATH . '/config/database.php';
