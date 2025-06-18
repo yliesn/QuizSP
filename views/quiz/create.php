@@ -13,32 +13,32 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'ADMIN') {
 // Générer un token CSRF
 $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 
+define('ROOT_PATH', realpath(__DIR__ . '/../../'));
 $page_title = 'Créer un quiz';
-include __DIR__ . '/../../includes/header.php';
+include ROOT_PATH . '/includes/header.php';
 ?>
-<div class="container py-5">
+<div class="container py-8">
     <div class="quiz-container mx-auto">
-        <h1 class="text-center mb-4 font-oswald">Générateur de Quiz JSON</h1>
-        <div class="quiz-info-form mb-4">
-            <h3 class="font-oswald">Informations Générales du Quiz</h3>
-            <div class="mb-3">
-                <label for="quizTitle" class="form-label">Titre du Quiz :</label>
+        <h1 class="text-center mb-6 font-oswald text-3xl text-secondary">Générateur de Quiz</h1>
+        <div class="quiz-info-form mb-6">
+            <h3 class="font-oswald text-xl mb-4">Informations Générales du Quiz</h3>
+            <div class="mb-4">
+                <label for="quizTitle" class="form-label text-custom">Titre du Quiz :</label>
                 <input type="text" id="quizTitle" class="form-control" placeholder="Ex: Quiz de sécurité incendie" required>
             </div>
-            <div class="mb-3">
-                <label for="quizDescription" class="form-label">Description du Quiz :</label>
+            <div class="mb-4">
+                <label for="quizDescription" class="form-label text-custom">Description du Quiz :</label>
                 <textarea id="quizDescription" class="form-control" rows="4" placeholder="Ex: Ce quiz teste les connaissances fondamentales..." required></textarea>
             </div>
         </div>
         <div id="quizQuestions"></div>
         <button id="addQuestion" class="btn btn-custom-primary w-100 mb-3">Ajouter une question</button>
         <button id="generateJson" class="btn btn-custom-primary w-100">Générer le JSON du Quiz</button>
-        <button id="downloadJson" class="btn btn-custom-download w-100 d-none">ajout Quiz BDD</button>
-        <h2 class="text-center mt-5 mb-3 font-oswald">JSON du Quiz Généré :</h2>
+        <button id="downloadJson" class="btn btn-custom-download w-100 d-none">Ajouter le Quiz en BDD</button>
+        <h2 class="text-center mt-8 mb-4 font-oswald text-xl text-secondary">JSON du Quiz Généré :</h2>
         <pre id="jsonOutput" class="rounded p-4"></pre>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script>
 let quizData = {
             title: "",
