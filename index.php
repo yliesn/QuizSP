@@ -59,10 +59,26 @@ if (isset($_SESSION['error_message'])) {
             </div>
             
             <!-- Champ Mot de passe -->
-            <div>
+            <div style="position: relative;">
                 <label for="password" class="block text-custom">Mot de passe</label>
                 <input type="password" id="password" name="password" required class="mt-1 w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary">
+                <button type="button" onclick="togglePassword()" style="position: absolute; right: 10px; top: 38px; background: none; border: none; cursor: pointer;">
+                    <span id="eye-icon"><i class="fa-solid fa-eye"></i></span>
+                </button>
             </div>
+            <script>
+            function togglePassword() {
+                const pwd = document.getElementById('password');
+                const icon = document.getElementById('eye-icon');
+                if (pwd.type === 'password') {
+                    pwd.type = 'text';
+                    icon.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+                } else {
+                    pwd.type = 'password';
+                    icon.innerHTML = '<i class="fa-solid fa-eye"></i>';
+                }
+            }
+            </script>
             
             <!-- Bouton de connexion -->
             <button type="submit" class="w-full py-2 px-4 bg-primary text-white rounded hover:bg-secondary transition">Se connecter</button>
