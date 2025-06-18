@@ -18,7 +18,12 @@
             <li><a class="block px-4 py-2 hover:bg-gray-100" href="<?php echo BASE_URL; ?>/views/users/list.php">Utilisateurs</a></li>
             <li><a class="block px-4 py-2 hover:bg-gray-100" href="<?php echo BASE_URL; ?>/views/users/create.php">Créer un utilisateur</a></li>
         </ul>
-    </li>
+      </li>
+      <li>
+          <a class="px-4 py-2 rounded hover:bg-secondary transition flex items-center gap-2" href="/views/quiz/create.php">
+              <i class="fas fa-fire mr-1"></i> Générer un quiz
+          </a>
+      </li>
     <?php endif; ?>
 </ul>
 <ul class="flex flex-col lg:flex-row gap-2 ml-auto">

@@ -1,303 +1,33 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur de Quiz JSON - Pompier</title>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-        /* Couleurs inspirées des pompiers : bleu foncé, rouge vif, gris métallisé */
-        :root {
-            --bs-dark-blue: #2c3e50; /* Bleu marine, couleur d'uniforme */
-            --bs-firefighter-red: #e74c3c; /* Rouge vif, couleur d'urgence/camion */
-            --bs-light-gray: #ecf0f1; /* Gris clair, fond pour les cartes */
-            --bs-text-dark: #34495e; /* Gris-bleu foncé pour le texte principal */
-            --bs-text-muted: #7f8c8d; /* Gris moyen pour le texte secondaire */
-            --bs-primary-blue: #3498db; /* Bleu standard pour les actions */
-            --bs-success-green: #2ecc71; /* Vert pour le succès */
-            --bs-danger-red: #c0392b; /* Rouge plus profond pour l'erreur */
-            --bs-border-red: #c0392b; /* Bordure rouge pour le conteneur principal */
-
-            --bs-option-hover-bg: #dde1e2; /* Gris clair au survol des options */
-            --bs-option-selected-bg: #2980b9; /* Bleu foncé pour option sélectionnée */
-            --bs-option-correct-bg: #27ae60; /* Vert pour bonne réponse */
-            --bs-option-incorrect-bg: #e74c3c; /* Rouge vif pour mauvaise réponse */
-        }
-
-        /* Polices Google Fonts */
-        .font-roboto {
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .font-oswald {
-            font-family: 'Oswald', sans-serif; /* Pour les titres, plus robuste */
-        }
-
-        /* Styles généraux du corps */
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--bs-dark-blue);
-            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="50" x2="100" y2="50" stroke="%2334495e" stroke-width="1" opacity="0.1"/><line x1="50" y1="0" x2="50" y2="100" stroke="%2334495e" stroke-width="1" opacity="0.1"/></svg>'); /* Motif discret */
-            background-size: 50px 50px;
-        }
-
-        h1 {
-            color: var(--bs-firefighter-red) !important;
-            font-size: 2.8em;
-            text-transform: uppercase; /* Donne un aspect plus officiel */
-            letter-spacing: 1.5px;
-            font-family: 'Oswald', sans-serif;
-        }
-
-        h2 {
-            color: var(--bs-firefighter-red) !important;
-            font-size: 2.2em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-family: 'Oswald', sans-serif;
-        }
-
-        /* Conteneur principal du quiz */
-        .quiz-container {
-            max-width: 850px; /* Plus large pour plus d'espace */
-            border-radius: 0.75rem;
-            border: 5px solid var(--bs-firefighter-red) !important; /* Bordure rouge emblématique */
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Ombre plus prononcée */
-            background-color: var(--bs-dark-blue); /* Couleur de fond du conteneur principal */
-            padding: 30px;
-        }
-
-        /* Conteneur de la question (généralisé pour les formulaires) */
-        .question-form, .quiz-info-form {
-            background-color: var(--bs-light-gray) !important;
-            border: 1px solid #bdc3c7; /* Bordure subtile */
-            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05); /* Ombre intérieure douce */
-            padding: 20px;
-            margin-bottom: 25px;
-            border-radius: 0.5rem;
-        }
-
-        .question-form h3, .quiz-info-form h3 {
-            color: var(--bs-text-dark);
-            font-family: 'Oswald', sans-serif;
-            font-size: 1.8em;
-            margin-bottom: 20px;
-        }
-
-        .question-form label, .quiz-info-form label {
-            color: var(--bs-text-dark);
-            font-weight: 500;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .question-form input[type="text"],
-        .question-form textarea,
-        .question-form select,
-        .quiz-info-form input[type="text"],
-        .quiz-info-form textarea {
-            background-color: #fff;
-            border: 1px solid #bdc3c7;
-            color: var(--bs-text-dark);
-            padding: 0.8rem;
-            font-size: 1.1em;
-            border-radius: 0.35rem;
-            outline: none;
-            box-sizing: border-box;
-            width: 100%;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-            margin-bottom: 15px;
-        }
-
-        .question-form input[type="text"]:focus,
-        .question-form textarea:focus,
-        .question-form select:focus,
-        .quiz-info-form input[type="text"]:focus,
-        .quiz-info-form textarea:focus {
-            border-color: var(--bs-primary-blue);
-            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
-        }
-
-        .options-container, .correct-answers-selection-container {
-            margin-top: 15px;
-            padding: 15px;
-            border: 1px dashed #aeb6bf; /* Bordure en pointillé */
-            border-radius: 0.35rem;
-            background-color: #f1f3f4; /* Un gris très léger */
-        }
-
-        .option-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .option-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .option-item input[type="text"] {
-            flex-grow: 1;
-            margin-bottom: 0; /* Override default margin */
-            margin-right: 10px;
-        }
-
-        .remove-option, .remove-question {
-            background-color: var(--bs-danger-red);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 0.35rem;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: background-color 0.2s ease;
-        }
-
-        .remove-option:hover, .remove-question:hover {
-            background-color: var(--bs-border-red); /* Un rouge légèrement plus foncé */
-        }
-
-        .add-option {
-            background-color: var(--bs-success-green);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 0.35rem;
-            cursor: pointer;
-            font-size: 0.9em;
-            margin-top: 10px;
-            transition: background-color 0.2s ease;
-        }
-
-        .add-option:hover {
-            background-color: #23a060;
-        }
-
-        .btn-custom-primary {
-            background-color: var(--bs-primary-blue);
-            border-color: var(--bs-primary-blue);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 0.35rem;
-            cursor: pointer;
-            font-size: 1.1em;
-            margin-top: 20px;
-            width: 100%;
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-custom-primary:hover {
-            background-color: #217dbb;
-            border-color: #217dbb;
-            transform: translateY(-2px);
-        }
-
-        .btn-custom-download {
-            background-color: var(--bs-success-green);
-            border-color: var(--bs-success-green);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 0.35rem;
-            cursor: pointer;
-            font-size: 1.1em;
-            margin-top: 10px; /* Smaller margin to differentiate from main buttons */
-            width: 100%;
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-custom-download:hover {
-            background-color: #23a060;
-            border-color: #23a060;
-            transform: translateY(-2px);
-        }
-
-        .btn-custom-danger {
-            background-color: var(--bs-danger-red);
-            border-color: var(--bs-danger-red);
-            color: white;
-            padding: 10px 18px;
-            border-radius: 0.35rem;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.2s ease;
-        }
-
-        .btn-custom-danger:hover {
-            background-color: var(--bs-border-red);
-        }
-
-        #jsonOutput {
-            background-color: #34495e; /* Couleur de fond foncée pour le code */
-            color: #ecf0f1; /* Texte clair */
-            padding: 20px;
-            border-radius: 0.5rem;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 14px;
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #7f8c8d; /* Bordure subtile */
-            margin-top: 30px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .alert-custom {
-            background-color: var(--bs-firefighter-red);
-            color: white;
-            padding: 15px;
-            border-radius: 0.5rem;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: bold;
-            font-family: 'Oswald', sans-serif;
-            font-size: 1.1em;
-        }
-    </style>
-</head>
-<body class="font-roboto">
-    <div class="container py-5">
-        <div class="quiz-container mx-auto">
-            <h1 class="text-center mb-4 font-oswald">Générateur de Quiz JSON</h1>
-
-            <div class="quiz-info-form mb-4">
-                <h3 class="font-oswald">Informations Générales du Quiz</h3>
-                <div class="mb-3">
-                    <label for="quizTitle" class="form-label">Titre du Quiz :</label>
-                    <input type="text" id="quizTitle" class="form-control" placeholder="Ex: Quiz de sécurité incendie" required>
-                </div>
-                <div class="mb-3">
-                    <label for="quizDescription" class="form-label">Description du Quiz :</label>
-                    <textarea id="quizDescription" class="form-control" rows="4" placeholder="Ex: Ce quiz teste les connaissances fondamentales..." required></textarea>
-                </div>
+<?php
+define('ROOT_PATH', realpath(__DIR__ . '/../../'));
+$page_title = 'Créer un quiz';
+include ROOT_PATH . '/includes/header.php';
+?>
+<div class="container py-5">
+    <div class="quiz-container mx-auto">
+        <h1 class="text-center mb-4 font-oswald">Générateur de Quiz JSON</h1>
+        <div class="quiz-info-form mb-4">
+            <h3 class="font-oswald">Informations Générales du Quiz</h3>
+            <div class="mb-3">
+                <label for="quizTitle" class="form-label">Titre du Quiz :</label>
+                <input type="text" id="quizTitle" class="form-control" placeholder="Ex: Quiz de sécurité incendie" required>
             </div>
-
-            <div id="quizQuestions">
-                </div>
-
-            <button id="addQuestion" class="btn btn-custom-primary w-100 mb-3">Ajouter une question</button>
-            <button id="generateJson" class="btn btn-custom-primary w-100">Générer le JSON du Quiz</button>
-            <button id="downloadJson" class="btn btn-custom-download w-100 d-none">ajout Quiz BDD</button>
-
-
-            <h2 class="text-center mt-5 mb-3 font-oswald">JSON du Quiz Généré :</h2>
-            <pre id="jsonOutput" class="rounded p-4"></pre>
+            <div class="mb-3">
+                <label for="quizDescription" class="form-label">Description du Quiz :</label>
+                <textarea id="quizDescription" class="form-control" rows="4" placeholder="Ex: Ce quiz teste les connaissances fondamentales..." required></textarea>
+            </div>
         </div>
+        <div id="quizQuestions"></div>
+        <button id="addQuestion" class="btn btn-custom-primary w-100 mb-3">Ajouter une question</button>
+        <button id="generateJson" class="btn btn-custom-primary w-100">Générer le JSON du Quiz</button>
+        <button id="downloadJson" class="btn btn-custom-download w-100 d-none">ajout Quiz BDD</button>
+        <h2 class="text-center mt-5 mb-3 font-oswald">JSON du Quiz Généré :</h2>
+        <pre id="jsonOutput" class="rounded p-4"></pre>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eBw5SbtZ+L5XQ" crossorigin="anonymous"></script>
-    <script>
-        let quizData = {
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script>
+let quizData = {
             title: "",
             description: "",
             questions: []
@@ -572,7 +302,7 @@
             const fileName = `quiz_${quizTitle.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()}.json`;
 
             try {
-                const response = await fetch('save-quiz.php', {
+                const response = await fetch('../../api/save-quiz.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -598,6 +328,5 @@
 
         // Add the first question form on page load
         addQuestionForm();
-    </script>
-</body>
-</html>
+</script>
+<?php include ROOT_PATH . '/includes/footer.php'; ?>
