@@ -4,10 +4,10 @@ require_once __DIR__ . '/../../auth/auth.php';
 require_login();
 
 // Vérifier le rôle admin
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'ADMIN') {
-    $_SESSION['error_message'] = "Accès refusé.";
-    redirect(BASE_URL . '/dashboard.php');
-}
+// if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'ADMIN') {
+//     $_SESSION['error_message'] = "Accès refusé.";
+//     redirect(BASE_URL . '/dashboard.php');
+// }
 
 define('ROOT_PATH', realpath(__DIR__ . '/../../'));
 $page_title = 'Liste des quiz';
@@ -24,7 +24,10 @@ if ($pdo) {
 <div class="min-h-screen flex flex-col items-center justify-start bg-custom py-10">
     <div class="w-full max-w-4xl bg-white rounded-lg shadow-lg p-8">
         <h1 class="text-2xl font-bold text-secondary font-oswald mb-8 text-center">Liste des Quiz</h1>
-        <a href="create.php" class="inline-block mb-6 px-6 py-2 bg-primary text-white rounded hover:bg-secondary transition">+ Nouveau quiz</a>
+        <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'ADMIN'): ?>
+            <a href="create.php" class="inline-block mb-6 px-6 py-2 bg-primary text-white rounded hover:bg-secondary transition">+ Nouveau quiz</a>
+        <?php endif; ?>
+
         <?php if (empty($quizz)): ?>
             <div class="text-center text-custom">Aucun quiz trouvé.</div>
         <?php else: ?>
