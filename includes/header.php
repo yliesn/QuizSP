@@ -62,8 +62,5 @@ $role = isset($_SESSION['user_role']) ? htmlspecialchars($_SESSION['user_role'])
             });
           }
         });
-        const notifications = new NotificationSystem({
-            position: 'top-right',
-            duration: 5000
-        });
+        // Suppression de la déclaration de notifications ici, car elle est maintenant dans le footer
     </script>

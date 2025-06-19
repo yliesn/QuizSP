@@ -15,4 +15,11 @@ if (!defined('ROOT_PATH')) {
         <p class="text-xs mt-2">Designé & développé par Ylies Nejara</p>
     </div>
 </footer>
+<!-- Ajout du système de notifications JS dans le footer pour garantir son chargement sur toutes les pages -->
+<script src="<?php echo BASE_URL; ?>/assets/js/notifications.js"></script>
+<script>
+    if (typeof notifications === 'undefined' && typeof NotificationSystem !== 'undefined') {
+        window.notifications = new NotificationSystem({ position: 'top-right', duration: 5000 });
+    }
+</script>
 <script src="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.js"></script>

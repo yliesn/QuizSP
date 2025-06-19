@@ -83,11 +83,18 @@ if (isset($_SESSION['error_message'])) {
             <!-- Bouton de connexion -->
             <button type="submit" class="w-full py-2 px-4 bg-primary text-white rounded hover:bg-secondary transition">Se connecter</button>
         </form>
+        <!-- Notification system -->
+        <script src="assets/js/notifications.js"></script>
+        <script>
         <?php if (!empty($error_message)): ?>
-            <div class="mt-4 p-2 bg-red-100 text-red-700 rounded text-center">
-                <?php echo htmlspecialchars($error_message); ?>
-            </div>
+            document.addEventListener('DOMContentLoaded', function() {
+                if (typeof NotificationSystem !== 'undefined') {
+                    const notifier = new NotificationSystem({ position: 'top-right', duration: 5000 });
+                    notifier.error('Erreur', <?php echo json_encode($error_message); ?>);
+                }
+            });
         <?php endif; ?>
+        </script>
     </div>
 </body>
 </html>
