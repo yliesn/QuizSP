@@ -331,13 +331,13 @@ let quizData = {
                 const result = await response.json();
 
                 if (response.ok && result.success) {
-                    alert(`Quiz sauvegardé avec succès sur le serveur : ${result.filename}`);
+                    notifications.success('Succès', `Quiz sauvegardé avec succès sur le serveur`);
                 } else {
                     throw new Error(result.error || 'Erreur inconnue');
                 }
             } catch (error) {
                 console.error('Erreur:', error);
-                alert(`Erreur lors de la sauvegarde: ${error.message}`);
+                notifications.error('Erreur', `Erreur lors de la sauvegarde: ${error.message}`);
             }
         }
 

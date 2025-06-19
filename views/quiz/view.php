@@ -445,6 +445,13 @@ submitButton.addEventListener('click', () => {
 // Lancer le quiz au chargement
 startQuiz();
 </script>
+<!-- Ajout du système de notifications JS si le footer n'est pas inclus -->
+<script src="../../assets/js/notifications.js"></script>
+<script>
+    if (typeof notifications === 'undefined' && typeof NotificationSystem !== 'undefined') {
+        window.notifications = new NotificationSystem({ position: 'top-right', duration: 5000 });
+    }
+</script>
 </body>
 </html>
 <?php
