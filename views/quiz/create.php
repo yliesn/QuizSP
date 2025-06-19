@@ -345,3 +345,13 @@ let quizData = {
         addQuestionForm();
 </script>
 <?php include ROOT_PATH . '/includes/footer.php'; ?>
+<?php if (!empty($message)): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        notifications.<?php echo $message_type; ?>(
+            '<?php echo $message_type === 'success' ? 'Succès' : 'Erreur'; ?>',
+            '<?php echo addslashes($message); ?>'
+        );
+    });
+</script>
+<?php endif; ?>

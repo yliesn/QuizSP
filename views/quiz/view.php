@@ -168,6 +168,16 @@ if (!in_array($user_role, ['ADMIN', 'MODERATEUR'])) {
         <a href="list.php" class="inline-block mt-6 px-6 py-2" style="background:#e74c3c;color:#fff;border-radius:2em;font-weight:bold;text-decoration:none;box-shadow:0 2px 8px #f5b7b1;transition:background 0.2s;">← Retour à la liste des quiz</a>
     </div>
 </div>
+<?php if (!empty($message)): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        notifications.<?php echo $message_type; ?>(
+            '<?php echo $message_type === 'success' ? 'Succès' : 'Erreur'; ?>',
+            '<?php echo addslashes($message); ?>'
+        );
+    });
+</script>
+<?php endif; ?>
 <script>
 // Générer les données du quiz depuis PHP vers JS
 const questions = <?php echo json_encode(array_map(function($q) {
@@ -410,7 +420,7 @@ nextButton.addEventListener('click', () => {
             }
         }, 700);
     } else {
-        alert("Veuillez sélectionner ou saisir votre réponse avant de passer à la question suivante.");
+        notifications.error('Erreur', 'Veuillez sélectionner ou saisir votre réponse avant de passer à la question suivante.');
     }
 });
 
@@ -428,7 +438,7 @@ submitButton.addEventListener('click', () => {
             showResults();
         }, 700);
     } else {
-        alert("Veuillez sélectionner ou saisir votre réponse avant de voir les résultats.");
+        notifications.error('Erreur', 'Veuillez sélectionner ou saisir votre réponse avant de voir les résultats.');
     }
 });
 
