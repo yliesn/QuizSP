@@ -45,7 +45,7 @@ $user_id = $_SESSION['user_id'];
 $user_role = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : '';
 
 // Vérifier si l'utilisateur a déjà passé ce quiz (sauf admin ou modérateur)
-if (!in_array($user_role, ['admin', 'moderateur'])) {
+if (!in_array($user_role, ['ADMIN', 'MODERATEUR'])) {
     $stmt = $pdo->prepare('SELECT score, date_passage FROM resultat_quiz WHERE user_id = ? AND quizz_id = ? ORDER BY date_passage DESC LIMIT 1');
     $stmt->execute([$user_id, $quizz_id]);
     $result = $stmt->fetch();
