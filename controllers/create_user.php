@@ -16,6 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prenom = trim($_POST['prenom'] ?? '');
     $login = trim($_POST['login'] ?? '');
     $role = $_POST['role'] ?? 'USER';
+    $roles_valides = ['USER', 'MODERATEUR', 'ADMIN', 'JSP1', 'JSP2', 'JSP3', 'JSP4'];
+    if (!in_array($role, $roles_valides, true)) {
+        $_SESSION['error_message'] = "Rôle utilisateur invalide.";
+        redirect(BASE_URL . '/views/users/create.php');
+    }
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
     $csrf_token = $_POST['csrf_token'] ?? '';

@@ -51,6 +51,10 @@ if (!empty($_SESSION['success_message'])) {
                 <option value="USER">Utilisateur</option>
                 <option value="MODERATEUR">Modérateur</option>
                 <option value="ADMIN">Administrateur</option>
+                <option value="JSP1">JSP 1</option>
+                <option value="JSP2">JSP 2</option>
+                <option value="JSP3">JSP 3</option>
+                <option value="JSP4">JSP 4</option>
             </select>
         </div>
         <div>
