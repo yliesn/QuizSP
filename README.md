@@ -34,3 +34,19 @@
 - [ ] Vérifier l’affichage correct sur desktop et mobile.
 - [ ] Tester tous les liens du menu/navigation.
 - [ ] Vérifier l’affichage des messages d’erreur et de succès.
+
+
+# SaaS Pompier
+
+SaaS Pompier est une application web collaborative dédiée à la gestion de quiz et d’utilisateurs, pensée pour les besoins de formation et d’évaluation des pompiers. Le projet propose :
+
+- **Authentification sécurisée** avec gestion des rôles (utilisateur, modérateur, administrateur), protection CSRF et gestion avancée des sessions.
+- **Gestion complète des utilisateurs** : création, modification, désactivation/réactivation, changement de mot de passe, et interface de profil.
+- **Module de quiz interactif** : création de quiz, édition, visualisation, passage de quiz, enregistrement et affichage des résultats.
+- **Système de notifications moderne** pour tous les retours utilisateur (succès, erreur, info).
+- **Interface responsive** basée sur Tailwind CSS, adaptée à tous les écrans.
+- **Sécurité renforcée** : validation côté client et serveur, accès restreint selon les rôles, protection contre les accès non autorisés.
+- **Expérience utilisateur fluide** : navigation claire, feedback immédiat, footer sticky, et design ergonomique.
+
+Le code est organisé en MVC, chaque fonctionnalité est testable via le plan de tests ci-dessous.  
+Ce projet est idéal pour une équipe de développeurs souhaitant collaborer sur une plateforme pédagogique robuste et évolutive.

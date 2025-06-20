@@ -15,6 +15,15 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 
 $page_title = 'Créer un utilisateur';
 include __DIR__ . '/../../includes/header.php';
+
+// Affichage notification après création utilisateur
+$message = '';
+$message_type = '';
+if (!empty($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    $message_type = $_SESSION['message_type'] ?? 'info';
+    unset($_SESSION['message'], $_SESSION['message_type']);
+}
 ?>
 <div class="container mx-auto max-w-2xl mt-10 p-8 bg-white rounded-lg shadow-lg">
     <h1 class="text-2xl font-bold mb-6 text-primary flex items-center gap-2"><i class="fas fa-user-plus"></i>Créer un utilisateur</h1>
@@ -71,4 +80,14 @@ if (userForm) {
     });
 }
 </script>
+<?php if (!empty($message)): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        notifications.<?php echo $message_type; ?>(
+            '<?php echo $message_type === 'success' ? 'Succès' : ucfirst($message_type); ?>',
+            '<?php echo addslashes($message); ?>'
+        );
+    });
+</script>
+<?php endif; ?>
 <?php include __DIR__ . '/../../includes/footer.php'; ?>
