@@ -19,10 +19,14 @@ include __DIR__ . '/../../includes/header.php';
 // Affichage notification après création utilisateur
 $message = '';
 $message_type = '';
-if (!empty($_SESSION['message'])) {
-    $message = $_SESSION['message'];
-    $message_type = $_SESSION['message_type'] ?? 'info';
-    unset($_SESSION['message'], $_SESSION['message_type']);
+if (!empty($_SESSION['success_message'])) {
+    $message = $_SESSION['success_message'];
+    $message_type = 'success';
+    unset($_SESSION['success_message']);
+} elseif (!empty($_SESSION['error_message'])) {
+    $message = $_SESSION['error_message'];
+    $message_type = 'error';
+    unset($_SESSION['error_message']);
 }
 ?>
 <div class="container mx-auto max-w-2xl mt-10 p-8 bg-white rounded-lg shadow-lg">
