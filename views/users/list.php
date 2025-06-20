@@ -46,9 +46,11 @@ include __DIR__ . '/../../includes/header.php';
                     <td class="py-2 px-4"><?php echo htmlspecialchars($user['login']); ?></td>
                     <td class="py-2 px-4">
                         <?php if ($user['role'] === 'ADMIN'): ?>
-                            <span class="uppercase px-2 py-1 rounded bg-red-500 text-white">Administrateur</span>
+                            <span class="uppercase px-2 py-1 rounded bg-red-500 text-white">animateur</span>
                         <?php elseif ($user['role'] === 'MODERATEUR'): ?>
-                            <span class="uppercase px-2 py-1 rounded bg-yellow-500 text-white">Modérateur</span>
+                            <span class="uppercase px-2 py-1 rounded bg-yellow-500 text-white">aide-anim</span>
+                        <?php elseif (in_array($user['role'], ['JSP1', 'JSP2', 'JSP3', 'JSP4'])): ?>
+                            <span class="uppercase px-2 py-1 rounded bg-indigo-500 text-white"><?php echo htmlspecialchars($user['role']); ?></span>
                         <?php else: ?>
                             <span class="uppercase px-2 py-1 rounded bg-blue-400 text-white">Utilisateur</span>
                         <?php endif; ?>
