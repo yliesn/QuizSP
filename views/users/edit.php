@@ -90,6 +90,10 @@ include __DIR__ . '/../../includes/header.php';
                 <option value="USER" <?php if ($user['role']==='USER') echo 'selected'; ?>>Utilisateur</option>
                 <option value="MODERATEUR" <?php if ($user['role']==='MODERATEUR') echo 'selected'; ?>>Modérateur</option>
                 <option value="ADMIN" <?php if ($user['role']==='ADMIN') echo 'selected'; ?>>Administrateur</option>
+                <option value="JSP1" <?php if ($user['role']==='JSP1') echo 'selected'; ?>>JSP 1</option>
+                <option value="JSP2" <?php if ($user['role']==='JSP2') echo 'selected'; ?>>JSP 2</option>
+                <option value="JSP3" <?php if ($user['role']==='JSP3') echo 'selected'; ?>>JSP 3</option>
+                <option value="JSP4" <?php if ($user['role']==='JSP4') echo 'selected'; ?>>JSP 4</option>
             </select>
         </div>
         <div>
