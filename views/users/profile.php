@@ -66,6 +66,8 @@ include __DIR__ . '/../../includes/header.php';
                     <span class="uppercase px-2 py-1 rounded bg-red-500 text-white">Administrateur</span>
                 <?php elseif ($user['role'] === 'MODERATEUR'): ?>
                     <span class="uppercase px-2 py-1 rounded bg-yellow-500 text-white">Modérateur</span>
+                <?php elseif (in_array($user['role'], ['JSP1', 'JSP2', 'JSP3', 'JSP4'])): ?>
+                    <span class="uppercase px-2 py-1 rounded bg-indigo-500 text-white"><?php echo htmlspecialchars($user['role']); ?></span>
                 <?php else: ?>
                     <span class="uppercase px-2 py-1 rounded bg-blue-400 text-white">Utilisateur</span>
                 <?php endif; ?>
