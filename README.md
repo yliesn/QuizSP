@@ -1,6 +1,6 @@
 # SaaS_pompier
 
-## Plan de tests utilisateur – SaaS Pompier
+## Plan de tests utilisateur – QuizSP
 
 ### 1. Authentification
 - [ ] Tester la connexion avec un compte valide (utilisateur, modérateur, admin).
@@ -36,9 +36,9 @@
 - [ ] Vérifier l’affichage des messages d’erreur et de succès.
 
 
-# SaaS Pompier
+# QuizSP
 
-SaaS Pompier est une application web collaborative dédiée à la gestion de quiz et d’utilisateurs, pensée pour les besoins de formation et d’évaluation des pompiers. Le projet propose :
+QuizSP est une application web collaborative dédiée à la gestion de quiz et d’utilisateurs, pensée pour les besoins de formation et d’évaluation des pompiers. Le projet propose :
 
 - **Authentification sécurisée** avec gestion des rôles (utilisateur, modérateur, administrateur), protection CSRF et gestion avancée des sessions.
 - **Gestion complète des utilisateurs** : création, modification, désactivation/réactivation, changement de mot de passe, et interface de profil.
@@ -46,7 +46,7 @@ SaaS Pompier est une application web collaborative dédiée à la gestion de qui
 - **Système de notifications moderne** pour tous les retours utilisateur (succès, erreur, info).
 - **Interface responsive** basée sur Tailwind CSS, adaptée à tous les écrans.
 - **Sécurité renforcée** : validation côté client et serveur, accès restreint selon les rôles, protection contre les accès non autorisés.
-- **Expérience utilisateur fluide** : navigation claire, feedback immédiat, footer sticky, et design ergonomique.
+- **Expérience utilisateur fluide** : navigation claire, feedback immédiat, et design ergonomique.
 
 Le code est organisé en MVC, chaque fonctionnalité est testable via le plan de tests ci-dessous.  
 Ce projet est idéal pour une équipe de développeurs souhaitant collaborer sur une plateforme pédagogique robuste et évolutive.
