@@ -40,6 +40,8 @@ if (isset($_SESSION['error_message'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Correction du chemin du CSS personnalisé en relatif pour éviter le mixed content -->
     <link href="<?php echo BASE_URL; ?>/assets/css/custom.css" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1976d2">
     <title>QuizSP</title>
 </head>
 <body class="bg-custom min-h-screen flex items-center justify-center">
@@ -85,6 +87,19 @@ if (isset($_SESSION['error_message'])) {
         </form>
         <!-- Notification system -->
         <script src="assets/js/notifications.js"></script>
+        <script>
+            if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/service-worker.js')
+                .then(function(reg) {
+                    console.log('Service Worker enregistré avec succès:', reg.scope);
+                })
+                .catch(function(err) {
+                    console.warn('Erreur lors de l’enregistrement du Service Worker:', err);
+                });
+            });
+            }
+        </script>
         <script>
         <?php if (!empty($error_message)): ?>
             document.addEventListener('DOMContentLoaded', function() {

@@ -94,6 +94,8 @@ if (!in_array($user_role, ['ADMIN', 'MODERATEUR'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($quiz['titre']); ?> - Quiz</title>
     <link rel="stylesheet" href="style_quiz.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1976d2">
     <style>
         body {
             min-height: 100vh;
@@ -168,6 +170,19 @@ if (!in_array($user_role, ['ADMIN', 'MODERATEUR'])) {
         <a href="list.php" class="inline-block mt-6 px-6 py-2" style="background:#e74c3c;color:#fff;border-radius:2em;font-weight:bold;text-decoration:none;box-shadow:0 2px 8px #f5b7b1;transition:background 0.2s;">← Retour à la liste des quiz</a>
     </div>
 </div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(function(reg) {
+              console.log('Service Worker enregistré avec succès:', reg.scope);
+            })
+            .catch(function(err) {
+              console.warn('Erreur lors de l’enregistrement du Service Worker:', err);
+            });
+        });
+      }
+    </script>
 <?php if (!empty($message)): ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -18,6 +18,19 @@ if (!defined('ROOT_PATH')) {
 <!-- Ajout du système de notifications JS dans le footer pour garantir son chargement sur toutes les pages -->
 <script src="<?php echo BASE_URL; ?>/assets/js/notifications.js"></script>
 <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(function(reg) {
+            console.log('Service Worker enregistré avec succès:', reg.scope);
+            })
+            .catch(function(err) {
+            console.warn('Erreur lors de l’enregistrement du Service Worker:', err);
+            });
+        });
+    }
+</script>
+<script>
     if (typeof notifications === 'undefined' && typeof NotificationSystem !== 'undefined') {
         window.notifications = new NotificationSystem({ position: 'top-right', duration: 5000 });
     }

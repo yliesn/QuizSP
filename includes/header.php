@@ -28,6 +28,8 @@ $role = isset($_SESSION['user_role']) ? htmlspecialchars($_SESSION['user_role'])
     <!-- Correction du chemin du CSS personnalisé en relatif pour éviter le mixed content -->
     <link href="<?php echo BASE_URL; ?>/assets/css/custom.css" rel="stylesheet">
     <script src="<?php echo BASE_URL; ?>/assets/js/notifications.js"></script>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1976d2">
     <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' - ' : ''; ?>QuizSP</title>
 </head>
 <body>
@@ -40,6 +42,7 @@ $role = isset($_SESSION['user_role']) ? htmlspecialchars($_SESSION['user_role'])
             <?php include __DIR__ . '/navigation.php'; ?>
         </div>
     </nav>
+
     <script>
         // Menu mobile toggle
         document.getElementById('navbar-toggle').addEventListener('click', function() {

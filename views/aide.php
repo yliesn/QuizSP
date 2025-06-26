@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aide - Plateforme Quiz Pompier</title>
     <link rel="stylesheet" href="/assets/css/custom.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1976d2">
     <style>
         body { background: #f4f6fb; font-family: 'Segoe UI', Arial, sans-serif; }
         .help-container {
@@ -90,5 +92,18 @@
 
     <a href="<?php echo BASE_URL; ?>/dashboard.php" class="btn-dashboard">← Retour au tableau de bord</a>
 </div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(function(reg) {
+              console.log('Service Worker enregistré avec succès:', reg.scope);
+            })
+            .catch(function(err) {
+              console.warn('Erreur lors de l’enregistrement du Service Worker:', err);
+            });
+        });
+      }
+    </script>
 </body>
 </html>
