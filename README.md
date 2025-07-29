@@ -1,4 +1,4 @@
-²   # QuizSP – Plateforme de quiz pour pompiers
+# QuizSP – Plateforme de quiz pour pompiers
 
 QuizSP est une application web collaborative dédiée à la gestion de quiz et d’utilisateurs, pensée à l’origine pour les besoins de formation et d’évaluation des Jeunes Sapeurs-Pompiers (JSP).
 
