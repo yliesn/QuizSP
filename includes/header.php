@@ -29,6 +29,7 @@ $role = isset($_SESSION['user_role']) ? htmlspecialchars($_SESSION['user_role'])
     <link href="<?php echo BASE_URL; ?>/assets/css/custom.css" rel="stylesheet">
     <script src="<?php echo BASE_URL; ?>/assets/js/notifications.js"></script>
     <link rel="manifest" href="/manifest.json">
+    <meta name="robots" content="noindex">
     <meta name="theme-color" content="#1976d2">
     <title><?php echo isset($page_title) ? htmlspecialchars($page_title) . ' - ' : ''; ?>QuizSP</title>
 </head>

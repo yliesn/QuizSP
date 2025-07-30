@@ -41,6 +41,7 @@ if (isset($_SESSION['error_message'])) {
     <!-- Correction du chemin du CSS personnalisé en relatif pour éviter le mixed content -->
     <link href="<?php echo BASE_URL; ?>/assets/css/custom.css" rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
+    <meta name="robots" content="noindex">
     <meta name="theme-color" content="#1976d2">
     <title>QuizSP</title>
 </head>
