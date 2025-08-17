@@ -24,6 +24,7 @@ CREATE TABLE question (
     id INT AUTO_INCREMENT PRIMARY KEY,
     quizz_id INT NOT NULL,
     texte_question TEXT NOT NULL,
+    type_question ENUM('texte', 'choix_unique', 'choix_multiple') NOT NULL DEFAULT 'texte',
     FOREIGN KEY (quizz_id) REFERENCES quizz(id) ON DELETE CASCADE
 );
 

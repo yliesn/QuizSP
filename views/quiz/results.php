@@ -72,10 +72,10 @@ include __DIR__ . '/../../includes/header.php';
     <h1 class="text-2xl font-bold mb-6 text-primary flex items-center gap-2"><i class="fas fa-poll"></i> Résultats des quizz</h1>
     <div class="mb-6 flex items-center gap-4">
         <form method="get" class="flex flex-wrap gap-4 items-end">
-            <div>
+            <!-- <div>
                 <label for="user" class="block text-custom">Nom ou prénom</label>
                 <input type="text" id="user" name="user" value="<?php echo htmlspecialchars($filter_user); ?>" class="mt-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary">
-            </div>
+            </div> -->
             <div>
                 <label for="quiz" class="block text-custom">Quiz</label>
                 <input type="text" id="quiz" name="quiz" value="<?php echo htmlspecialchars($filter_quiz); ?>" class="mt-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary">

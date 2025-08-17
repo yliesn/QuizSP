@@ -44,17 +44,31 @@ try {
 
         // Insertion des questions et réponses
         foreach ($quizData['questions'] as $question) {
-            $stmtQ = $pdo->prepare('INSERT INTO question (quizz_id, texte_question) VALUES (?, ?)');
-            $stmtQ->execute([$quizz_id, $question['question']]);
+            // Déterminer le type de question
+            $type_question = $question['type']; // Le type vient directement du JSON
+            
+            // Insérer la question avec son type
+            $stmtQ = $pdo->prepare('INSERT INTO question (quizz_id, texte_question, type_question) VALUES (?, ?, ?)');
+            $stmtQ->execute([$quizz_id, $question['question'], $type_question]);
             $question_id = $pdo->lastInsertId();
 
-            if ($question['type'] === 'choix_multiple') {
+            // Insérer les réponses selon le type
+            if ($type_question === 'choix_multiple') {
+                // Pour choix multiple : insérer toutes les options
                 foreach ($question['options'] as $option) {
                     $is_correct = in_array($option, $question['reponse_correcte']) ? 1 : 0;
                     $stmtR = $pdo->prepare('INSERT INTO reponse (question_id, texte_reponse, est_correcte) VALUES (?, ?, ?)');
                     $stmtR->execute([$question_id, $option, $is_correct]);
                 }
-            } elseif ($question['type'] === 'texte') {
+            } elseif ($type_question === 'choix_unique') {
+                // Pour choix unique : insérer toutes les options, une seule est correcte
+                foreach ($question['options'] as $option) {
+                    $is_correct = ($option === $question['reponse_correcte'][0]) ? 1 : 0;
+                    $stmtR = $pdo->prepare('INSERT INTO reponse (question_id, texte_reponse, est_correcte) VALUES (?, ?, ?)');
+                    $stmtR->execute([$question_id, $option, $is_correct]);
+                }
+            } elseif ($type_question === 'texte') {
+                // Pour texte : insérer seulement la bonne réponse
                 $stmtR = $pdo->prepare('INSERT INTO reponse (question_id, texte_reponse, est_correcte) VALUES (?, ?, 1)');
                 $stmtR->execute([$question_id, $question['reponse_correcte']]);
             }
